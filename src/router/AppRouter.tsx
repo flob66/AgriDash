@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Login } from '../pages/Login/Login'
 import { Register } from '../pages/Register/Register'
 import { Dashboard } from '../pages/Dashboard/Dashboard'
+import { Account } from '../pages/Account/Account'
 import { ProtectedRoute } from './ProtectedRoute'
 import { useAuth } from '../hooks/useAuth'
 
@@ -37,6 +38,14 @@ export function AppRouter() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute>
+              <Account />
             </ProtectedRoute>
           }
         />
