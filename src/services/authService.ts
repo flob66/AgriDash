@@ -5,6 +5,9 @@ export const authService = {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+      },
     })
     return { data, error }
   },
@@ -21,7 +24,11 @@ export const authService = {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/dashboard',
+        redirectTo: `${window.location.origin}/dashboard`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     })
     return { data, error }
@@ -37,10 +44,16 @@ export const authService = {
     return user
   },
 
+  async getSession() {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session
+  },
+
   onAuthStateChange(callback: (user: any) => void) {
-    return supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       callback(session?.user || null)
     })
+    return { data: { subscription } }
   },
 
   async deleteUser(password: string) {
