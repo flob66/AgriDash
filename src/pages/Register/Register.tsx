@@ -42,13 +42,20 @@ export function Register() {
 
   return (
     <div className="register-page">
-      <AuthForm
-        mode="register"
-        onSubmit={handleEmailRegister}
-        onGoogleLogin={handleGoogleLogin}
-        error={error}
-        loading={loading}
-      />
+      <div className="register-container">
+        <div className="register-brand">
+          <div className="register-logo">🌾</div>
+          <h1 className="register-title">AgriDash</h1>
+          <p className="register-subtitle">Rejoignez la communauté des jeunes agriculteurs</p>
+        </div>
+        <AuthForm
+          mode="register"
+          onSubmit={handleEmailRegister}
+          onGoogleLogin={handleGoogleLogin}
+          error={error}
+          loading={loading}
+        />
+      </div>
     </div>
   )
 }

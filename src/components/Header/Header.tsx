@@ -11,11 +11,17 @@ export function Header() {
     navigate('/login')
   }
 
+  const getUserInitial = () => {
+    if (!user?.email) return '👤'
+    return user.email.charAt(0).toUpperCase()
+  }
+
   return (
     <header className="header">
       <div className="header-container">
         <Link to="/dashboard" className="header-logo">
-          <h1>AgriDash</h1>
+          <span className="logo-icon">🌾</span>
+          <span className="logo-text">AgriDash</span>
         </Link>
         
         <nav className="header-nav">
@@ -28,9 +34,15 @@ export function Header() {
         </nav>
 
         <div className="header-user">
-          <span className="user-email">{user?.email}</span>
+          <div className="user-info">
+            <div className="user-avatar">
+              {getUserInitial()}
+            </div>
+            <span className="user-email">{user?.email}</span>
+          </div>
           <button onClick={handleLogout} className="logout-button">
-            Déconnexion
+            <span className="logout-icon">🚪</span>
+            <span className="logout-text">Déconnexion</span>
           </button>
         </div>
       </div>

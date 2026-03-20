@@ -38,13 +38,20 @@ export function Login() {
 
   return (
     <div className="login-page">
-      <AuthForm
-        mode="login"
-        onSubmit={handleEmailLogin}
-        onGoogleLogin={handleGoogleLogin}
-        error={error}
-        loading={loading}
-      />
+      <div className="login-container">
+        <div className="login-brand">
+          <div className="login-logo">🌾</div>
+          <h1 className="login-title">AgriDash</h1>
+          <p className="login-subtitle">Gérez votre exploitation agricole en toute simplicité</p>
+        </div>
+        <AuthForm
+          mode="login"
+          onSubmit={handleEmailLogin}
+          onGoogleLogin={handleGoogleLogin}
+          error={error}
+          loading={loading}
+        />
+      </div>
     </div>
   )
 }

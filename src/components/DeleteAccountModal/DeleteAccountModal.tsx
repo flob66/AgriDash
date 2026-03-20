@@ -43,26 +43,35 @@ export default function DeleteAccountModal({ onClose, onSuccess }: DeleteAccount
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Supprimer définitivement mon compte</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <div className="modal-header-content">
+            <div className="modal-icon">⚠️</div>
+            <h2>Supprimer mon compte</h2>
+          </div>
+          <button className="close-btn" onClick={onClose} aria-label="Fermer">
+            ×
+          </button>
         </div>
         
         <div className="modal-body">
           <div className="warning-message">
-            ⚠️ Attention : Cette action est irréversible !
+            <span className="warning-icon">⚠️</span>
+            <span>Action irréversible</span>
           </div>
           
           <p className="info-text">
             Vous êtes sur le point de supprimer définitivement votre compte ainsi que toutes vos données associées.
-            Veuillez confirmer en saisissant votre mot de passe.
+            Cette action ne peut pas être annulée.
           </p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="password">Mot de passe</label>
+              <label htmlFor="password" className="form-label">
+                Confirmez avec votre mot de passe
+              </label>
               <input
                 type="password"
                 id="password"
+                className="form-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Saisissez votre mot de passe"
@@ -73,7 +82,8 @@ export default function DeleteAccountModal({ onClose, onSuccess }: DeleteAccount
 
             {error && (
               <div className="error-message">
-                {error}
+                <span className="error-icon">❌</span>
+                <span>{error}</span>
               </div>
             )}
 
@@ -91,7 +101,14 @@ export default function DeleteAccountModal({ onClose, onSuccess }: DeleteAccount
                 className="confirm-btn"
                 disabled={loading}
               >
-                {loading ? 'Suppression en cours...' : 'Confirmer la suppression'}
+                {loading ? (
+                  <>
+                    <span className="loading-spinner-small"></span>
+                    Suppression...
+                  </>
+                ) : (
+                  'Confirmer la suppression'
+                )}
               </button>
             </div>
           </form>

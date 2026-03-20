@@ -49,15 +49,15 @@ export function AuthForm({ mode, onSubmit, onGoogleLogin, error, loading }: Auth
   return (
     <div className="auth-form-container">
       <div className="auth-card">
-        <h2>{getTitle()}</h2>
+        <h2 className="auth-title">{getTitle()}</h2>
         
         {(error || localError) && (
-          <div className="error-message">{error || localError}</div>
+          <div className="auth-error">{error || localError}</div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="form-label">Adresse email</label>
             <input
               type="email"
               id="email"
@@ -65,11 +65,13 @@ export function AuthForm({ mode, onSubmit, onGoogleLogin, error, loading }: Auth
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
+              className="form-input"
+              placeholder="jean.dupont@example.fr"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password" className="form-label">Mot de passe</label>
             <input
               type="password"
               id="password"
@@ -77,12 +79,14 @@ export function AuthForm({ mode, onSubmit, onGoogleLogin, error, loading }: Auth
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
+              className="form-input"
+              placeholder="••••••••"
             />
           </div>
 
           {mode === 'register' && (
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
+              <label htmlFor="confirmPassword" className="form-label">Confirmer le mot de passe</label>
               <input
                 type="password"
                 id="confirmPassword"
@@ -90,17 +94,27 @@ export function AuthForm({ mode, onSubmit, onGoogleLogin, error, loading }: Auth
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 disabled={loading}
+                className="form-input"
+                placeholder="••••••••"
               />
             </div>
           )}
 
-          <button type="submit" disabled={loading} className="submit-button">
-            {loading ? 'Chargement...' : getButtonText()}
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="submit-button"
+          >
+            {loading ? (
+              <span className="button-loading">Chargement...</span>
+            ) : (
+              getButtonText()
+            )}
           </button>
         </form>
 
-        <div className="divider">
-          <span>ou</span>
+        <div className="auth-divider">
+          <span>Ou continuer avec</span>
         </div>
 
         <button
@@ -126,19 +140,19 @@ export function AuthForm({ mode, onSubmit, onGoogleLogin, error, loading }: Auth
               fill="#EA4335"
             />
           </svg>
-          Continuer avec Google
+          Google
         </button>
 
         <div className="auth-footer">
           {mode === 'login' ? (
             <p>
               Pas encore de compte ?{' '}
-              <a href="/register">S'inscrire</a>
+              <a href="/register" className="auth-link">Créer un compte</a>
             </p>
           ) : (
             <p>
               Déjà un compte ?{' '}
-              <a href="/login">Se connecter</a>
+              <a href="/login" className="auth-link">Se connecter</a>
             </p>
           )}
         </div>
