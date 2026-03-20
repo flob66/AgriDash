@@ -42,4 +42,54 @@ export const authService = {
       callback(session?.user || null)
     })
   },
+
+  async deleteUser(password: string) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user || !user.email) {
+        return { 
+          success: false, 
+          error: 'Utilisateur non authentifié' 
+        }
+      }
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: password,
+      })
+
+      if (signInError) {
+        return { 
+          success: false, 
+          error: 'Mot de passe incorrect' 
+        }
+      }
+
+      const { data, error: functionError } = await supabase.rpc('delete_user')
+
+      if (functionError) {
+        return { 
+          success: false, 
+          error: functionError.message 
+        }
+      }
+
+      if (!data?.success) {
+        return { 
+          success: false, 
+          error: data?.error || 'Erreur lors de la suppression' 
+        }
+      }
+
+      await supabase.auth.signOut()
+
+      return { success: true }
+    } catch (error: any) {
+      return { 
+        success: false, 
+        error: error.message || 'Une erreur est survenue' 
+      }
+    }
+  },
 }

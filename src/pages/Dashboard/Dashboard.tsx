@@ -1,29 +1,14 @@
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
+import { Header } from '../../components/Header/Header'
 import './Dashboard.css'
 
 export function Dashboard() {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-
-  const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
-
   return (
     <div className="dashboard">
-      <nav className="dashboard-nav">
-        <h1>AgriDash</h1>
-        <button onClick={handleLogout} className="logout-button">
-          Déconnexion
-        </button>
-      </nav>
+      <Header />
       
       <main className="dashboard-content">
         <div className="welcome-card">
           <h2>Bienvenue sur votre tableau de bord</h2>
-          <p>Connecté en tant que : {user?.email}</p>
         </div>
 
         <div className="dashboard-grid">
