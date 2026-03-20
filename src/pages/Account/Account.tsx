@@ -53,10 +53,24 @@ export function Account() {
     navigate('/register', { state: { message: 'Compte supprimé avec succès' } })
   }
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
   if (loading) {
     return (
-      <div className="account-container">
-        <div className="loading-spinner">Chargement...</div>
+      <div>
+        <Header />
+        <div className="account-container">
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Chargement de votre profil...</p>
+          </div>
+        </div>
       </div>
     )
   }
@@ -66,22 +80,35 @@ export function Account() {
       <Header />
       <div className="account-container">
         <div className="account-card">
-          <h1 className="account-title">Mon compte</h1>
+          <div className="account-header">
+            <div className="account-avatar">👤</div>
+            <h1 className="account-title">Mon compte</h1>
+            <p className="account-subtitle">Gérez vos informations personnelles</p>
+          </div>
           
           <div className="account-info">
             <div className="info-group">
-              <label>Email</label>
-              <p>{user?.email}</p>
+              <div className="info-icon">📧</div>
+              <div className="info-content">
+                <label>Adresse email</label>
+                <p>{user?.email}</p>
+              </div>
             </div>
             
             <div className="info-group">
-              <label>Nom complet</label>
-              <p>{profile?.full_name || 'Non renseigné'}</p>
+              <div className="info-icon">👨‍🌾</div>
+              <div className="info-content">
+                <label>Nom complet</label>
+                <p>{profile?.full_name || 'Non renseigné'}</p>
+              </div>
             </div>
             
             <div className="info-group">
-              <label>Membre depuis</label>
-              <p>{profile?.created_at ? new Date(profile.created_at).toLocaleDateString('fr-FR') : 'Non renseigné'}</p>
+              <div className="info-icon">📅</div>
+              <div className="info-content">
+                <label>Membre depuis</label>
+                <p>{profile?.created_at ? formatDate(profile.created_at) : 'Non renseigné'}</p>
+              </div>
             </div>
           </div>
 
@@ -90,6 +117,7 @@ export function Account() {
               className="delete-account-btn"
               onClick={handleDeleteAccount}
             >
+              <span className="btn-icon">🗑️</span>
               Supprimer définitivement mon compte
             </button>
           </div>
