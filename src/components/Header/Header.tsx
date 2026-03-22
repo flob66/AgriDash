@@ -28,6 +28,9 @@ export function Header() {
           <Link to="/dashboard" className="nav-link">
             Tableau de bord
           </Link>
+          <Link to="/animals" className="nav-link">
+            Mes animaux
+          </Link>
           <Link to="/account" className="nav-link">
             Mon compte
           </Link>
