@@ -28,6 +28,8 @@
   --color-danger: #dc2626;
   --color-danger-dark: #b91c1c;
   --color-danger-light: #fee2e2;
+  --color-info: #3b82f6;
+  --color-info-light: #dbeafe;
   
   /* Spacing */
   --spacing-1: 0.25rem;

@@ -1,0 +1,218 @@
+.animal-form {
+  width: 100%;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  animation: slideIn var(--transition-normal);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.form-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-3);
+  display: inline-block;
+  background: var(--color-primary-soft);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-full);
+}
+
+.animal-form h2 {
+  margin: 0 0 var(--spacing-2) 0;
+  color: var(--color-gray-900);
+  font-size: var(--font-2xl);
+  font-weight: var(--font-bold);
+  letter-spacing: -0.025em;
+}
+
+.form-subtitle {
+  color: var(--color-gray-600);
+  font-size: var(--font-sm);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-6);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-2);
+  color: var(--color-gray-700);
+  font-weight: var(--font-medium);
+  font-size: var(--font-sm);
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: var(--spacing-1);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: var(--spacing-3);
+  font-size: var(--font-lg);
+  color: var(--color-gray-400);
+  pointer-events: none;
+}
+
+.animal-form input {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-8);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-base);
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  background-color: var(--color-white);
+  outline: none;
+}
+
+.animal-form input:hover {
+  border-color: var(--color-gray-300);
+}
+
+.animal-form input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.animal-form input.error {
+  border-color: var(--color-error);
+  background-color: var(--color-error-light);
+}
+
+.animal-form input.error:focus {
+  box-shadow: 0 0 0 3px var(--color-error-light);
+}
+
+.error-text {
+  color: var(--color-error);
+  font-size: var(--font-xs);
+  margin-top: var(--spacing-2);
+  display: block;
+  font-weight: var(--font-medium);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-8);
+}
+
+.btn-secondary,
+.btn-primary {
+  flex: 1;
+  padding: var(--spacing-3) var(--spacing-6);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-base);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.btn-secondary {
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-200);
+}
+
+.btn-secondary:hover {
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-300);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-icon {
+  font-size: var(--font-base);
+}
+
+@media (max-width: 768px) {
+  .form-header {
+    margin-bottom: var(--spacing-6);
+  }
+  
+  .form-icon {
+    font-size: 2.5rem;
+    padding: var(--spacing-2);
+  }
+  
+  .animal-form h2 {
+    font-size: var(--font-xl);
+  }
+  
+  .form-subtitle {
+    font-size: var(--font-xs);
+  }
+  
+  .form-group {
+    margin-bottom: var(--spacing-5);
+  }
+  
+  .input-icon {
+    left: var(--spacing-2);
+    font-size: var(--font-base);
+  }
+  
+  .animal-form input {
+    padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-7);
+    font-size: var(--font-sm);
+  }
+  
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: var(--spacing-3);
+    margin-top: var(--spacing-6);
+  }
+  
+  .btn-secondary,
+  .btn-primary {
+    padding: var(--spacing-3);
+    font-size: var(--font-sm);
+  }
+}
