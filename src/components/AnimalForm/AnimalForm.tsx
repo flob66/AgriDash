@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import AnimalPhotoGallery from '../AnimalPhotoGallery/AnimalPhotoGallery';
 import './AnimalForm.css';
 
 interface AnimalFormProps {
@@ -14,6 +15,7 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }: AnimalFormProps) => {
     age: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [refreshGallery, setRefreshGallery] = useState(0);
 
   useEffect(() => {
     if (initialData) {
@@ -58,6 +60,10 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }: AnimalFormProps) => {
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
+  };
+
+  const handlePhotoChange = () => {
+    setRefreshGallery(prev => prev + 1);
   };
 
   return (
@@ -127,6 +133,14 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }: AnimalFormProps) => {
         </div>
         {errors.age && <span className="error-text">{errors.age}</span>}
       </div>
+
+      {initialData?.id && (
+        <AnimalPhotoGallery 
+          key={refreshGallery}
+          animalId={initialData.id} 
+          onPhotoChange={handlePhotoChange}
+        />
+      )}
 
       <div className="form-actions">
         <button type="button" className="btn-secondary" onClick={onCancel}>

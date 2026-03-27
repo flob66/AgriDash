@@ -72,11 +72,42 @@ export const animalsService = {
   },
 
   async deleteAnimal(animalId: string) {
-    const { error } = await supabase
+
+    const { data: photos, error: fetchError } = await supabase
+      .from('animal_photos')
+      .select('id')
+      .eq('animal_id', animalId);
+
+    if (fetchError) {
+      console.error('Error fetching photos:', fetchError);
+      throw new Error(`Impossible de récupérer les photos: ${fetchError.message}`);
+    }
+
+    if (photos && photos.length > 0) {
+      const photoIds = photos.map(photo => photo.id);
+
+      const { error: deletePhotosError } = await supabase
+        .from('animal_photos')
+        .delete()
+        .in('id', photoIds);
+
+      if (deletePhotosError) {
+        console.error('Error deleting photos:', deletePhotosError);
+        throw new Error(`Impossible de supprimer les photos: ${deletePhotosError.message}`);
+      }
+
+      console.log(`Deleted ${photoIds.length} photos for animal ${animalId}`);
+    }
+
+    const { error: deleteAnimalError } = await supabase
       .from('animals')
       .delete()
       .eq('id', animalId);
 
-    if (error) throw error;
+    if (deleteAnimalError) {
+      throw new Error(`Impossible de supprimer l'animal: ${deleteAnimalError.message}`);
+    }
+
+    return { success: true, deletedPhotosCount: photos?.length || 0 };
   },
 };

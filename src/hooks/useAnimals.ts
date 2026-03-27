@@ -75,10 +75,13 @@ export const useAnimals = (filters: Filters) => {
   const deleteAnimal = async (animalId: string) => {
     setError(null);
     try {
-      await animalsService.deleteAnimal(animalId);
+      const result = await animalsService.deleteAnimal(animalId);
+      console.log(`Animal deleted successfully. ${result.deletedPhotosCount} photos removed.`);
       await fetchAnimals();
+      return result;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors de la suppression');
+      const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la suppression';
+      setError(errorMessage);
       throw err;
     }
   };
