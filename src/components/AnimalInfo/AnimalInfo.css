@@ -1,0 +1,89 @@
+.animal-info-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.animal-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.animal-info-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.animal-info-icon {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.animal-info-header h2 {
+  font-size: 1.25rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.animal-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: background 0.3s ease;
+}
+
+.info-row:hover {
+  background: #ecf0f1;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .animal-info-card {
+    padding: 1rem;
+  }
+  
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .info-label {
+    font-size: 0.85rem;
+  }
+  
+  .info-value {
+    font-size: 0.85rem;
+  }
+}

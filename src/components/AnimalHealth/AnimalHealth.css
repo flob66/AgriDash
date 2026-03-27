@@ -1,0 +1,195 @@
+.animal-health-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.animal-health-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.health-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title-icon {
+  font-size: 1.5rem;
+}
+
+.animal-health-header h2 {
+  font-size: 1.25rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.no-health-data {
+  text-align: center;
+  padding: 3rem;
+  color: #7f8c8d;
+}
+
+.no-data-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.no-health-data p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.no-health-data span {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.health-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #f0f0f0;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #7f8c8d;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tab-btn:hover {
+  color: #3498db;
+}
+
+.tab-btn.active {
+  color: #3498db;
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #3498db;
+}
+
+.health-content {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.health-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.health-item {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.health-item:hover {
+  background: #ecf0f1;
+  transform: translateX(4px);
+}
+
+.health-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.issue-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.health-item-header h3 {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.health-date {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #ecf0f1;
+  color: #7f8c8d;
+}
+
+.status-badge.active {
+  background: #fff3e0;
+  color: #e67e22;
+}
+
+.status-badge.resolved {
+  background: #e8f5e9;
+  color: #27ae60;
+}
+
+.health-detail {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-right: 0.5rem;
+}
+
+.empty-list {
+  text-align: center;
+  padding: 2rem;
+  color: #bdc3c7;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .animal-health-card {
+    padding: 1rem;
+  }
+  
+  .health-tabs {
+    gap: 0.25rem;
+  }
+  
+  .tab-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .health-item-header {
+    flex-direction: column;
+  }
+}
