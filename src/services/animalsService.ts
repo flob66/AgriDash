@@ -1,4 +1,4 @@
-import { supabase } from '../services/supabaseClient';
+import { supabase } from './supabaseClient';
 
 export interface Animal {
   id: string;
@@ -19,6 +19,13 @@ export interface UpdateAnimalData {
   name?: string;
   species?: string | null;
   age?: number | null;
+}
+
+export interface AnimalPhoto {
+  id: string;
+  animal_id: string;
+  url: string;
+  created_at: string;
 }
 
 export const animalsService = {
@@ -46,6 +53,28 @@ export const animalsService = {
 
     if (error) throw error;
     return data as Animal[];
+  },
+
+  async getAnimalById(animalId: string) {
+    const { data, error } = await supabase
+      .from('animals')
+      .select('*')
+      .eq('id', animalId)
+      .single();
+
+    if (error) throw error;
+    return data as Animal;
+  },
+
+  async getAnimalPhotos(animalId: string) {
+    const { data, error } = await supabase
+      .from('animal_photos')
+      .select('*')
+      .eq('animal_id', animalId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data as AnimalPhoto[];
   },
 
   async createAnimal(userId: string, data: CreateAnimalData) {

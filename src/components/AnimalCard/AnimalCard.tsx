@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './AnimalCard.css';
 
 interface Animal {
@@ -59,6 +60,14 @@ const AnimalCard = ({ animal, onEdit, onDelete }: AnimalCardProps) => {
           <span className="animal-emoji">{getSpeciesEmoji(animal.species)}</span>
         </div>
         <div className="animal-actions">
+          <Link 
+            to={`/animals/${animal.id}`} 
+            className="action-btn info"
+            aria-label="Informations"
+            title="Voir la fiche détaillée"
+          >
+            ℹ️
+          </Link>
           <button 
             className="action-btn edit" 
             onClick={() => onEdit(animal)}
