@@ -23,7 +23,7 @@ export const uploadAnimalPhoto = async (file: File, animalId: string): Promise<s
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data, error: dbError } = await supabase
+  const { error: dbError } = await supabase
     .from('animal_photos')
     .insert({
       animal_id: animalId,
