@@ -8,7 +8,7 @@ import './Animals.css';
 
 interface Filters {
   search: string;
-  species: string;
+  species: string[];
   sortBy: 'name' | 'age';
   sortOrder: 'asc' | 'desc';
 }
@@ -18,7 +18,7 @@ export function Animals() {
   const [editingAnimal, setEditingAnimal] = useState<any>(null);
   const [filters, setFilters] = useState<Filters>({
     search: '',
-    species: '',
+    species: [],
     sortBy: 'name',
     sortOrder: 'asc',
   });

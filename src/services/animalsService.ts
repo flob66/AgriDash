@@ -22,7 +22,7 @@ export interface UpdateAnimalData {
 }
 
 export const animalsService = {
-  async getAnimals(userId: string, filters?: { search?: string; species?: string; sortBy?: 'name' | 'age'; sortOrder?: 'asc' | 'desc' }) {
+  async getAnimals(userId: string, filters?: { search?: string; species?: string[]; sortBy?: 'name' | 'age'; sortOrder?: 'asc' | 'desc' }) {
     let query = supabase
       .from('animals')
       .select('*')
@@ -32,8 +32,8 @@ export const animalsService = {
       query = query.ilike('name', `%${filters.search}%`);
     }
 
-    if (filters?.species) {
-      query = query.eq('species', filters.species);
+    if (filters?.species && filters.species.length > 0) {
+      query = query.in('species', filters.species);
     }
 
     if (filters?.sortBy) {

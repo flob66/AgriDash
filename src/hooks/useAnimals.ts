@@ -4,7 +4,7 @@ import { supabase } from '../services/supabaseClient';
 
 interface Filters {
   search: string;
-  species: string;
+  species: string[];
   sortBy: 'name' | 'age';
   sortOrder: 'asc' | 'desc';
 }
