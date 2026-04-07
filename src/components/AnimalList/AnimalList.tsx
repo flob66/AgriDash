@@ -26,10 +26,10 @@ const AnimalList = ({ animals, loading, onEdit, onDelete }: AnimalListProps) => 
         <div className="empty-icon">🐄</div>
         <h3>Aucun animal enregistré</h3>
         <p>Commencez par ajouter votre premier animal à votre exploitation</p>
-        <button className="empty-action-btn" onClick={() => document.querySelector('[data-add-animal]')?.dispatchEvent(new Event('click'))}>
+        {/* <button className="empty-action-btn" onClick={() => document.querySelector('[data-add-animal]')?.dispatchEvent(new Event('click'))}>
           <span>➕</span>
           Ajouter un animal
-        </button>
+        </button> */}
       </div>
     );
   }
