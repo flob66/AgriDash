@@ -4,6 +4,7 @@ import { Register } from '../pages/Register/Register'
 import { Dashboard } from '../pages/Dashboard/Dashboard'
 import { Account } from '../pages/Account/Account'
 import { Animals } from '../pages/Animals/Animals'
+import { AnimalDetail } from '../pages/AnimalDetail/AnimalDetail'
 import { ProtectedRoute } from './ProtectedRoute'
 import { useAuth } from '../hooks/useAuth'
 
@@ -55,6 +56,14 @@ export function AppRouter() {
           element={
             <ProtectedRoute>
               <Animals />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/animals/:id"
+          element={
+            <ProtectedRoute>
+              <AnimalDetail />
             </ProtectedRoute>
           }
         />

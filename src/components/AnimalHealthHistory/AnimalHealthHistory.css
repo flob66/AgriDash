@@ -1,0 +1,194 @@
+.animal-health-history {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.animal-health-history h3 {
+  margin: 0 0 var(--spacing-4) 0;
+  font-size: var(--font-xl);
+  color: var(--color-gray-900);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 2px solid var(--color-gray-100);
+}
+
+.health-tabs {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
+  border-bottom: 2px solid var(--color-gray-200);
+  padding-bottom: var(--spacing-2);
+}
+
+.health-tab {
+  padding: var(--spacing-2) var(--spacing-4);
+  background: none;
+  border: none;
+  font-size: var(--font-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
+.health-tab:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.health-tab.active {
+  color: var(--color-primary);
+}
+
+.health-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+.health-content {
+  animation: fadeIn var(--transition-normal);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.health-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.health-card {
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  transition: all var(--transition-fast);
+  border: 1px solid var(--color-gray-200);
+}
+
+.health-card:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.health-card-header {
+  margin-bottom: var(--spacing-3);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.health-card-header strong {
+  font-size: var(--font-base);
+  color: var(--color-gray-900);
+}
+
+.health-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--font-sm);
+}
+
+.detail-label {
+  font-weight: var(--font-medium);
+  color: var(--color-gray-600);
+  min-width: 120px;
+}
+
+.detail-value {
+  color: var(--color-gray-800);
+  text-align: right;
+  word-break: break-word;
+  max-width: 60%;
+}
+
+.document-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.document-link:hover {
+  text-decoration: underline;
+}
+
+.health-empty, .section-empty {
+  text-align: center;
+  padding: var(--spacing-8);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  color: var(--color-gray-500);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: var(--spacing-2);
+}
+
+.health-loading {
+  text-align: center;
+  padding: var(--spacing-8);
+  color: var(--color-gray-500);
+}
+
+@media (max-width: 768px) {
+  .animal-health-history {
+    padding: var(--spacing-4);
+  }
+
+  .health-tabs {
+    flex-wrap: wrap;
+    gap: var(--spacing-1);
+  }
+
+  .health-tab {
+    flex: 1;
+    text-align: center;
+    font-size: var(--font-xs);
+    padding: var(--spacing-2);
+  }
+
+  .detail-row {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .detail-label {
+    min-width: auto;
+  }
+
+  .detail-value {
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .health-card {
+    padding: var(--spacing-3);
+  }
+}

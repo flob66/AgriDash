@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import './AnimalCard.css';
 
 interface Animal {
@@ -16,6 +17,8 @@ interface AnimalCardProps {
 }
 
 const AnimalCard = ({ animal, onEdit, onDelete }: AnimalCardProps) => {
+  const navigate = useNavigate();
+
   const getSpeciesEmoji = (species: string): string => {
     const emojis: Record<string, string> = {
       vache: '🐄',
@@ -52,8 +55,22 @@ const AnimalCard = ({ animal, onEdit, onDelete }: AnimalCardProps) => {
     return labels[species?.toLowerCase()] || species;
   };
 
+  const handleCardClick = () => {
+    navigate(`/animals/${animal.id}`);
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit(animal);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(animal.id);
+  };
+
   return (
-    <div className="animal-card">
+    <div className="animal-card" onClick={handleCardClick}>
       <div className="animal-card-header">
         <div className="animal-avatar">
           <span className="animal-emoji">{getSpeciesEmoji(animal.species)}</span>
@@ -61,7 +78,7 @@ const AnimalCard = ({ animal, onEdit, onDelete }: AnimalCardProps) => {
         <div className="animal-actions">
           <button 
             className="action-btn edit" 
-            onClick={() => onEdit(animal)}
+            onClick={handleEditClick}
             aria-label="Modifier"
             title="Modifier"
           >
@@ -69,7 +86,7 @@ const AnimalCard = ({ animal, onEdit, onDelete }: AnimalCardProps) => {
           </button>
           <button 
             className="action-btn delete" 
-            onClick={() => onDelete(animal.id)}
+            onClick={handleDeleteClick}
             aria-label="Supprimer"
             title="Supprimer"
           >
