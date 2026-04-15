@@ -8,7 +8,7 @@ import './Animals.css';
 
 interface Filters {
   search: string;
-  species: string;
+  species: string[];
   sortBy: 'name' | 'age';
   sortOrder: 'asc' | 'desc';
 }
@@ -18,7 +18,7 @@ export function Animals() {
   const [editingAnimal, setEditingAnimal] = useState<any>(null);
   const [filters, setFilters] = useState<Filters>({
     search: '',
-    species: '',
+    species: [],
     sortBy: 'name',
     sortOrder: 'asc',
   });
@@ -69,6 +69,12 @@ export function Animals() {
     setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
+  const handleModalOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleFormClose();
+    }
+  };
+
   return (
     <div className="animals-page">
       <Header />
@@ -91,7 +97,7 @@ export function Animals() {
           <AnimalFilters filters={filters} onFilterChange={handleFilterChange} />
 
           {showForm && (
-            <div className="modal-overlay" onClick={handleFormClose}>
+            <div className="modal-overlay" onClick={handleModalOverlayClick}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="modal-close" onClick={handleFormClose}>×</button>
                 <AnimalForm

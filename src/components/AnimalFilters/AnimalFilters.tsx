@@ -2,7 +2,7 @@ import './AnimalFilters.css';
 
 interface Filters {
   search: string;
-  species: string;
+  species: string[];
   sortBy: 'name' | 'age';
   sortOrder: 'asc' | 'desc';
 }
@@ -24,7 +24,21 @@ const AnimalFilters = ({ filters, onFilterChange }: AnimalFiltersProps) => {
   ];
 
   const handleSpeciesChange = (speciesValue: string) => {
-    onFilterChange({ species: speciesValue });
+    if (speciesValue === '') {
+      onFilterChange({ species: [] });
+      return;
+    }
+    
+    const currentSpecies = filters.species;
+    let newSpecies: string[];
+    
+    if (currentSpecies.includes(speciesValue)) {
+      newSpecies = currentSpecies.filter(s => s !== speciesValue);
+    } else {
+      newSpecies = [...currentSpecies, speciesValue];
+    }
+    
+    onFilterChange({ species: newSpecies });
   };
 
   const clearSearch = () => {
@@ -71,9 +85,9 @@ const AnimalFilters = ({ filters, onFilterChange }: AnimalFiltersProps) => {
             {speciesOptions.map((species) => (
               <button
                 key={species.value}
-                className={`species-btn ${filters.species === species.value ? 'active' : ''}`}
+                className={`species-btn ${species.value === '' ? (filters.species.length === 0 ? 'active' : '') : filters.species.includes(species.value) ? 'active' : ''}`}
                 onClick={() => handleSpeciesChange(species.value)}
-                aria-pressed={filters.species === species.value}
+                aria-pressed={species.value === '' ? filters.species.length === 0 : filters.species.includes(species.value)}
               >
                 <span className="species-icon">{species.icon}</span>
                 <span className="species-label">{species.label}</span>

@@ -1,129 +1,90 @@
-import { useState } from 'react';
-import { supabase } from '../../services/supabaseClient';
+import { useState, useEffect } from 'react';
+import { getAnimalPhotos, type AnimalPhoto } from '../../services/animalPhotosService';
 import './AnimalImages.css';
-
-interface AnimalPhoto {
-  id: string;
-  url: string;
-  created_at: string;
-}
 
 interface AnimalImagesProps {
   animalId: string;
-  photos: AnimalPhoto[];
-  onPhotoAdded: () => void;
+  refreshTrigger?: number;
 }
 
-export function AnimalImages({ animalId, photos, onPhotoAdded }: AnimalImagesProps) {
-  const [uploading, setUploading] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<AnimalPhoto | null>(null);
+const AnimalImages = ({ animalId, refreshTrigger = 0 }: AnimalImagesProps) => {
+  const [photos, setPhotos] = useState<AnimalPhoto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getAnimalPhotos(animalId);
+        setPhotos(data);
+      } catch (err) {
+        console.error('Error fetching photos:', err);
+        setError('Impossible de charger les photos');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setUploading(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${animalId}/${Date.now()}.${fileExt}`;
-      const filePath = fileName;
+    fetchPhotos();
+  }, [animalId, refreshTrigger]);
 
-      const { error: uploadError } = await supabase.storage
-        .from('animal-images')
-        .upload(filePath, file);
+  if (loading) {
+    return (
+      <div className="animal-images">
+        <div className="images-header">
+          <h3>Photos</h3>
+        </div>
+        <div className="images-loading">
+          <div className="spinner"></div>
+          <span>Chargement...</span>
+        </div>
+      </div>
+    );
+  }
 
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('animal-images')
-        .getPublicUrl(filePath);
-
-      const { error: dbError } = await supabase
-        .from('animal_photos')
-        .insert([{ animal_id: animalId, url: publicUrl }]);
-
-      if (dbError) throw dbError;
-
-      onPhotoAdded();
-    } catch (error) {
-      console.error('Erreur lors de l\'upload:', error);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleDeletePhoto = async (photoId: string) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) return;
-
-    try {
-      const { error } = await supabase
-        .from('animal_photos')
-        .delete()
-        .eq('id', photoId);
-
-      if (error) throw error;
-      onPhotoAdded();
-    } catch (error) {
-      console.error('Erreur lors de la suppression:', error);
-    }
-  };
+  if (error) {
+    return (
+      <div className="animal-images">
+        <div className="images-header">
+          <h3>Photos</h3>
+        </div>
+        <div className="images-error">
+          <span>⚠️ {error}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="animal-images-card">
-      <div className="animal-images-header">
-        <div className="animal-images-title">
-          <span className="title-icon">🖼️</span>
-          <h2>Photos</h2>
-        </div>
-        <label className="upload-button">
-          {uploading ? 'Upload en cours...' : '+ Ajouter une photo'}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileUpload}
-            disabled={uploading}
-            style={{ display: 'none' }}
-          />
-        </label>
+    <div className="animal-images">
+      <div className="images-header">
+        <h3>Photos</h3>
+        <span className="photo-count">{photos.length} photo{photos.length !== 1 ? 's' : ''}</span>
       </div>
 
       {photos.length === 0 ? (
-        <div className="no-images">
-          <div className="no-images-icon">📸</div>
-          <p>Aucune image disponible</p>
-          <span>Ajoutez la première photo de votre animal</span>
+        <div className="no-photos">
+          <div className="no-photos-icon">📷</div>
+          <p>Aucune photo</p>
         </div>
       ) : (
-        <div className="images-gallery">
+        <div className="images-grid">
           {photos.map((photo) => (
             <div key={photo.id} className="image-card">
               <img
-                src={photo.url}
-                alt={`Photo animal`}
-                className="image-thumbnail"
-                onClick={() => setSelectedPhoto(photo)}
+                src={photo.file_url}
+                alt="Animal"
+                className="animal-image"
+                loading="lazy"
               />
-              <button
-                className="delete-image-btn"
-                onClick={() => handleDeletePhoto(photo.id)}
-              >
-                🗑️
-              </button>
             </div>
           ))}
         </div>
       )}
-
-      {selectedPhoto && (
-        <div className="modal-overlay" onClick={() => setSelectedPhoto(null)}>
-          <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-            <img src={selectedPhoto.url} alt="Agrandissement" className="full-image" />
-            <button className="modal-close-btn" onClick={() => setSelectedPhoto(null)}>
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
-}
+};
+
+export default AnimalImages;
