@@ -66,3 +66,41 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.vaccination-form-overlay,
+.treatment-form-overlay,
+.health-issue-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.vaccination-form,
+.treatment-form,
+.health-issue-form {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1101;
+}
+
+.modal-overlay {
+  z-index: 1000;
+}
+
+.modal-content {
+  z-index: 1001;
+  position: relative;
+}

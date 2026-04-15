@@ -69,6 +69,12 @@ export function Animals() {
     setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
+  const handleModalOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      handleFormClose();
+    }
+  };
+
   return (
     <div className="animals-page">
       <Header />
@@ -91,7 +97,7 @@ export function Animals() {
           <AnimalFilters filters={filters} onFilterChange={handleFilterChange} />
 
           {showForm && (
-            <div className="modal-overlay" onClick={handleFormClose}>
+            <div className="modal-overlay" onClick={handleModalOverlayClick}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="modal-close" onClick={handleFormClose}>×</button>
                 <AnimalForm
