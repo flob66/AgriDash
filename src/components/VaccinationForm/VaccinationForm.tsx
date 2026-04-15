@@ -16,7 +16,6 @@ interface VaccinationFormProps {
 
 export const VaccinationForm: React.FC<VaccinationFormProps> = ({
   vaccination,
-  animalId,
   onSubmit,
   onClose
 }) => {

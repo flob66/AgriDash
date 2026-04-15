@@ -11,7 +11,6 @@ interface HealthIssueFormProps {
 
 export const HealthIssueForm: React.FC<HealthIssueFormProps> = ({
   healthIssue,
-  animalId,
   onSubmit,
   onClose
 }) => {
@@ -62,7 +61,8 @@ export const HealthIssueForm: React.FC<HealthIssueFormProps> = ({
         symptoms: formData.symptoms || null,
         date: formData.date || null,
         duration: formData.duration || null,
-        treatment: formData.treatment || null
+        treatment: formData.treatment || null,
+        user_id: null
       });
     } catch (error) {
       console.error('Error submitting form:', error);

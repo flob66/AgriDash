@@ -207,13 +207,13 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }: AnimalFormProps) => {
 
         <div className="health-tab-content">
           {activeHealthTab === 'vaccinations' && (
-            <VaccinationSection animalId={initialData.id} />
+            <VaccinationSection animalId={initialData?.id} />
           )}
           {activeHealthTab === 'treatments' && (
-            <TreatmentSection animalId={initialData.id} />
+            <TreatmentSection animalId={initialData?.id} />
           )}
           {activeHealthTab === 'health-issues' && (
-            <HealthIssueSection animalId={initialData.id} />
+            <HealthIssueSection animalId={initialData?.id} />
           )}
         </div>
       </div>

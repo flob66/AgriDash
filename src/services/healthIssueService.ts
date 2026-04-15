@@ -27,7 +27,7 @@ export const healthIssueService = {
       .from('health_issues')
       .select('*')
       .eq('animal_id', animalId)
-      .order('date', { ascending: false, nullsLast: true });
+      .order('date', { ascending: false });
 
     if (error) throw error;
     return data || [];

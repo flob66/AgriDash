@@ -16,7 +16,6 @@ interface TreatmentFormProps {
 
 export const TreatmentForm: React.FC<TreatmentFormProps> = ({
   treatment,
-  animalId,
   onSubmit,
   onClose
 }) => {
