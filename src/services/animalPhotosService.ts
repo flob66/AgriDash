@@ -4,7 +4,7 @@ export interface AnimalPhoto {
   id: number;
   animal_id: string;
   file_url: string; 
-  user_id: string,
+  user_id: string;
   created_at: string;
 }
 
@@ -18,7 +18,6 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 export const uploadAnimalPhoto = async (file: File, animalId: string): Promise<string> => {
-
   const base64String = await fileToBase64(file);
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -55,7 +54,6 @@ export const getAnimalPhotos = async (animalId: string): Promise<AnimalPhoto[]> 
 };
 
 export const deleteAnimalPhoto = async (photoId: number): Promise<void> => {
-
   const { error: dbError } = await supabase
     .from('animal_photos')
     .delete()
@@ -64,4 +62,10 @@ export const deleteAnimalPhoto = async (photoId: number): Promise<void> => {
   if (dbError) {
     throw new Error(`Failed to delete photo: ${dbError.message}`);
   }
+};
+
+export const animalPhotosService = {
+  uploadAnimalPhoto,
+  getAnimalPhotos,
+  deleteAnimalPhoto,
 };

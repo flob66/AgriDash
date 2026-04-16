@@ -1,4 +1,4 @@
-import { supabase } from '../services/supabaseClient';
+import { supabase } from './supabaseClient';
 
 export interface Animal {
   id: string;
@@ -48,6 +48,17 @@ export const animalsService = {
     return data as Animal[];
   },
 
+  async getAnimalById(id: string): Promise<Animal | null> {
+    const { data, error } = await supabase
+      .from('animals')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data as Animal;
+  },
+
   async createAnimal(userId: string, data: CreateAnimalData) {
     const { data: animal, error } = await supabase
       .from('animals')
@@ -72,7 +83,6 @@ export const animalsService = {
   },
 
   async deleteAnimal(animalId: string) {
-
     const { data: photos, error: fetchError } = await supabase
       .from('animal_photos')
       .select('id')
