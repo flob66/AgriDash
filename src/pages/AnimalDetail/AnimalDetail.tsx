@@ -9,7 +9,7 @@ import './AnimalDetail.css';
 interface Animal {
   id: string;
   name: string;
-  species: string;
+  species: string | null;
   age: number | null;
   created_at: string;
 }

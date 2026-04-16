@@ -5,14 +5,14 @@ interface AnimalDetailInfoProps {
   animal: {
     id: string;
     name: string;
-    species: string;
+    species: string | null;
     age: number | null;
     created_at: string;
   };
 }
 
 export const AnimalDetailInfo: React.FC<AnimalDetailInfoProps> = ({ animal }) => {
-  const getSpeciesEmoji = (species: string): string => {
+  const getSpeciesEmoji = (species: any): string => {
     const emojis: Record<string, string> = {
       vache: '🐄',
       bovin: '🐄',
