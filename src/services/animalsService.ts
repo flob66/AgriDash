@@ -83,6 +83,33 @@ export const animalsService = {
   },
 
   async deleteAnimal(animalId: string) {
+    const { error: deleteHealthIssuesError } = await supabase
+      .from('health_issues')
+      .delete()
+      .eq('animal_id', animalId);
+
+    if (deleteHealthIssuesError) {
+      throw new Error(`Impossible de supprimer les problèmes de santé: ${deleteHealthIssuesError.message}`);
+    }
+
+    const { error: deleteTreatmentsError } = await supabase
+      .from('treatments')
+      .delete()
+      .eq('animal_id', animalId);
+
+    if (deleteTreatmentsError) {
+      throw new Error(`Impossible de supprimer les traitements: ${deleteTreatmentsError.message}`);
+    }
+
+    const { error: deleteVaccinationsError } = await supabase
+      .from('vaccinations')
+      .delete()
+      .eq('animal_id', animalId);
+
+    if (deleteVaccinationsError) {
+      throw new Error(`Impossible de supprimer les vaccinations: ${deleteVaccinationsError.message}`);
+    }
+
     const { data: photos, error: fetchError } = await supabase
       .from('animal_photos')
       .select('id')
@@ -119,5 +146,5 @@ export const animalsService = {
     }
 
     return { success: true, deletedPhotosCount: photos?.length || 0 };
-  },
+  }
 };
