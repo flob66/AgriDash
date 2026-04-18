@@ -38,11 +38,6 @@ export function TreatmentPhotoGallery({ animalId, onPhotoChange }: TreatmentPhot
     }
   }, [animalId]);
 
-  const handleFileSelect = (treatment: Treatment, file: File) => {
-    setSelectedTreatment(treatment);
-    setUploadFile(file);
-  };
-
   const handleUpload = async () => {
     if (!selectedTreatment || !uploadFile) return;
 

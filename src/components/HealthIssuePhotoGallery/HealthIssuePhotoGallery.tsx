@@ -38,11 +38,6 @@ export function HealthIssuePhotoGallery({ animalId, onPhotoChange }: HealthIssue
     }
   }, [animalId]);
 
-  const handleFileSelect = (healthIssue: HealthIssue, file: File) => {
-    setSelectedHealthIssue(healthIssue);
-    setUploadFile(file);
-  };
-
   const handleUpload = async () => {
     if (!selectedHealthIssue || !uploadFile) return;
 
