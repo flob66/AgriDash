@@ -1,39 +1,51 @@
+/* src/components/TreatmentList/TreatmentList.css */
 .treatment-list-empty {
   text-align: center;
-  padding: 2rem;
-  color: #6c757d;
-  background: white;
-  border-radius: 4px;
+  padding: var(--spacing-8);
+  color: var(--color-gray-500);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
 }
 
 .treatment-list {
-  background: white;
-  border-radius: 4px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
   overflow-x: auto;
+  box-shadow: var(--shadow-sm);
 }
 
 .treatment-list-header {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 100px;
-  background: #f8f9fa;
-  padding: 0.75rem;
+  grid-template-columns: 2fr 1.5fr 1fr 0.8fr 1fr 100px;
+  background: var(--color-gray-50);
+  padding: var(--spacing-3) var(--spacing-4);
   font-weight: 600;
-  color: #495057;
-  border-bottom: 2px solid #dee2e6;
-  min-width: 700px;
+  color: var(--color-gray-700);
+  border-bottom: 2px solid var(--color-gray-200);
+  min-width: 900px;
+}
+
+.header-name,
+.header-frequency,
+.header-end-date,
+.header-photo,
+.header-document,
+.header-actions {
+  font-size: 0.875rem;
 }
 
 .treatment-item {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 100px;
-  padding: 0.75rem;
-  border-bottom: 1px solid #dee2e6;
+  grid-template-columns: 2fr 1.5fr 1fr 0.8fr 1fr 100px;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: 1px solid var(--color-gray-200);
   align-items: center;
-  min-width: 700px;
+  min-width: 900px;
+  transition: background var(--transition-fast);
 }
 
 .treatment-item:hover {
-  background-color: #f8f9fa;
+  background-color: var(--color-gray-50);
 }
 
 .item-name {
@@ -41,35 +53,73 @@
 }
 
 .item-name strong {
-  color: #2c3e50;
+  color: var(--color-gray-800);
+  font-size: 0.875rem;
 }
 
 .item-frequency,
-.item-start-date,
 .item-end-date {
-  color: #6c757d;
+  color: var(--color-gray-600);
   font-size: 0.875rem;
 }
 
-.item-document a {
-  color: #3498db;
-  text-decoration: none;
-  font-size: 0.875rem;
+.item-photo {
+  display: flex;
+  align-items: center;
 }
 
-.item-document a:hover {
-  text-decoration: underline;
+.btn-view-photo {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  border: none;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-view-photo:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.no-photo {
+  color: var(--color-gray-400);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.item-document {
+  display: flex;
+  align-items: center;
+}
+
+.btn-download-document {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  border: none;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-download-document:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 .no-document {
-  color: #6c757d;
-  font-size: 0.875rem;
+  color: var(--color-gray-400);
+  font-size: 0.75rem;
   font-style: italic;
 }
 
 .item-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-2);
 }
 
 .btn-edit,
@@ -78,24 +128,28 @@
   border: none;
   cursor: pointer;
   font-size: 1rem;
-  padding: 0.25rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  padding: var(--spacing-1);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
 }
 
 .btn-edit:hover {
-  background-color: #e9ecef;
+  background-color: var(--color-gray-200);
+  transform: scale(1.1);
 }
 
 .btn-delete:hover {
-  background-color: #f8d7da;
+  background-color: var(--color-error-light);
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
   .treatment-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-4);
+    background: transparent;
+    box-shadow: none;
   }
 
   .treatment-list-header {
@@ -104,47 +158,73 @@
 
   .treatment-item {
     display: block;
-    padding: 1rem;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
+    padding: var(--spacing-4);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
     min-width: auto;
+    background: var(--color-white);
+    box-shadow: var(--shadow-sm);
   }
 
   .treatment-item > div {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-3);
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .treatment-item > div::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #495057;
+  .treatment-item > div:last-child {
+    margin-bottom: 0;
   }
 
-  .item-name {
-    font-size: 1rem;
+  .item-name::before {
+    content: "Nom du traitement:";
+    font-weight: 600;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
   }
 
   .item-frequency::before {
     content: "Fréquence:";
-  }
-
-  .item-start-date::before {
-    content: "Date début:";
+    font-weight: 600;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
   }
 
   .item-end-date::before {
-    content: "Date fin:";
+    content: "Date de fin:";
+    font-weight: 600;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
+  }
+
+  .item-photo::before {
+    content: "Photo:";
+    font-weight: 600;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
   }
 
   .item-document::before {
     content: "Document:";
+    font-weight: 600;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
+  }
+
+  .item-actions::before {
+    content: "Actions:";
+    font-weight: 600;
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
+  }
+
+  .item-name strong {
+    font-size: 1rem;
   }
 
   .item-actions {
     justify-content: flex-end;
-    margin-top: 0.5rem;
+    margin-top: var(--spacing-2);
   }
 }

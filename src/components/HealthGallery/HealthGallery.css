@@ -1,0 +1,90 @@
+.health-gallery {
+  width: 100%;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.gallery-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
+}
+
+.gallery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.gallery-card-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background: var(--color-gray-100);
+}
+
+.gallery-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.gallery-card:hover .gallery-card-image img {
+  transform: scale(1.05);
+}
+
+.gallery-card-info {
+  padding: var(--spacing-4);
+}
+
+.gallery-card-info h3 {
+  margin: 0 0 var(--spacing-2) 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+}
+
+.animal-name {
+  margin: 0 0 var(--spacing-1) 0;
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.issue-date {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
+}
+
+.gallery-empty {
+  text-align: center;
+  padding: var(--spacing-8);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  color: var(--color-gray-500);
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-4);
+  }
+
+  .gallery-card-image {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
