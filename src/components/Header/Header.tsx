@@ -23,13 +23,16 @@ export function Header() {
           <span className="logo-icon">🌾</span>
           <span className="logo-text">AgriDash</span>
         </Link>
-        
+
         <nav className="header-nav">
           <Link to="/dashboard" className="nav-link">
             Tableau de bord
           </Link>
           <Link to="/animals" className="nav-link">
             Mes animaux
+          </Link>
+          <Link to="/health-history" className="nav-link">
+            Santé
           </Link>
           <Link to="/account" className="nav-link">
             Mon compte

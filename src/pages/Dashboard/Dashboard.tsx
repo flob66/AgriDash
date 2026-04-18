@@ -8,32 +8,50 @@ import './Dashboard.css';
 export function Dashboard() {
   const { user } = useAuth();
   const [animalCount, setAnimalCount] = useState(0);
+  const [healthIssueCount, setHealthIssueCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  
+
   const userName = user?.email?.split('@')[0] || "Utilisateur";
-  
+
   useEffect(() => {
-    const fetchAnimalCount = async () => {
+    const fetchCounts = async () => {
       if (!user) return;
-      
+
       try {
-        const { count, error } = await supabase
+        const { count: animalCount, error: animalError } = await supabase
           .from('animals')
           .select('*', { count: 'exact', head: true })
           .eq('user_id', user.id);
-        
-        if (error) throw error;
-        setAnimalCount(count || 0);
+
+        if (animalError) throw animalError;
+        setAnimalCount(animalCount || 0);
+
+        const { data: animals } = await supabase
+          .from('animals')
+          .select('id')
+          .eq('user_id', user.id);
+
+        if (animals && animals.length > 0) {
+          const animalIds = animals.map(a => a.id);
+          const { count: healthCount, error: healthError } = await supabase
+            .from('health_issues')
+            .select('*', { count: 'exact', head: true })
+            .in('animal_id', animalIds);
+
+          if (!healthError) {
+            setHealthIssueCount(healthCount || 0);
+          }
+        }
       } catch (err) {
-        console.error('Erreur lors du comptage des animaux:', err);
+        console.error('Error fetching counts:', err);
       } finally {
         setLoading(false);
       }
     };
-    
-    fetchAnimalCount();
+
+    fetchCounts();
   }, [user]);
-  
+
   const dashboardCards = [
     {
       id: 1,
@@ -46,6 +64,15 @@ export function Dashboard() {
     },
     {
       id: 2,
+      title: "Santé",
+      description: "Historique des problèmes de santé",
+      icon: "🏥",
+      color: "card-primary",
+      link: "/health-history",
+      buttonText: "Voir l'historique santé"
+    },
+    {
+      id: 3,
       title: "Tâches",
       description: "Organisez votre travail",
       icon: "✅",
@@ -55,21 +82,21 @@ export function Dashboard() {
       disabled: true
     },
     {
-      id: 3,
+      id: 4,
       title: "Calendrier",
       description: "Planifiez vos activités",
       icon: "📅",
-      color: "card-primary",
+      color: "card-info",
       link: null,
       buttonText: "Bientôt disponible",
       disabled: true
     },
     {
-      id: 4,
+      id: 5,
       title: "Rapports",
       description: "Analysez vos données",
       icon: "📊",
-      color: "card-info",
+      color: "card-secondary",
       link: null,
       buttonText: "Bientôt disponible",
       disabled: true
@@ -79,7 +106,7 @@ export function Dashboard() {
   return (
     <div className="dashboard">
       <Header />
-      
+
       <main className="dashboard-content">
         <div className="welcome-card">
           <div className="welcome-icon">🌾</div>
@@ -97,16 +124,18 @@ export function Dashboard() {
             <div className="stat-label">Animaux</div>
           </div>
           <div className="stat-card">
+            <div className="stat-value">
+              {loading ? '...' : healthIssueCount}
+            </div>
+            <div className="stat-label">Problèmes de santé</div>
+          </div>
+          <div className="stat-card">
             <div className="stat-value">0</div>
             <div className="stat-label">Tâches en cours</div>
           </div>
           <div className="stat-card">
             <div className="stat-value">0</div>
             <div className="stat-label">Événements</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">0</div>
-            <div className="stat-label">Rapports</div>
           </div>
         </div>
 
@@ -130,5 +159,5 @@ export function Dashboard() {
         </div>
       </main>
     </div>
-  );
+  )
 }

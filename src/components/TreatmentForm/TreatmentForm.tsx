@@ -10,7 +10,8 @@ interface TreatmentFormProps {
     frequency: string | null;
     end_date: string | null;
     document_url: string | null;
-  }, file?: File) => Promise<void>;
+    photo_url: string | null;
+  }, file?: File, photoFile?: File) => Promise<void>;
   onClose: () => void;
 }
 
@@ -25,9 +26,11 @@ export const TreatmentForm: React.FC<TreatmentFormProps> = ({
     end_date: ''
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [errors, setErrors] = useState<{ treatment_name?: string; file?: string }>({});
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [errors, setErrors] = useState<{ treatment_name?: string; file?: string; photo?: string }>({});
   const [loading, setLoading] = useState(false);
   const [existingDocument, setExistingDocument] = useState<string | null>(null);
+  const [existingPhoto, setExistingPhoto] = useState<string | null>(null);
 
   useEffect(() => {
     if (treatment) {
@@ -37,11 +40,12 @@ export const TreatmentForm: React.FC<TreatmentFormProps> = ({
         end_date: treatment.end_date || ''
       });
       setExistingDocument(treatment.document_url);
+      setExistingPhoto(treatment.photo_url);
     }
   }, [treatment]);
 
   const validateForm = (): boolean => {
-    const newErrors: { treatment_name?: string; file?: string } = {};
+    const newErrors: { treatment_name?: string; file?: string; photo?: string } = {};
 
     if (!formData.treatment_name.trim()) {
       newErrors.treatment_name = 'Le nom du traitement est obligatoire';
@@ -53,6 +57,14 @@ export const TreatmentForm: React.FC<TreatmentFormProps> = ({
 
     if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
       newErrors.file = 'Le fichier ne doit pas dépasser 5 Mo';
+    }
+
+    if (selectedPhoto && !selectedPhoto.type.startsWith('image/')) {
+      newErrors.photo = 'Seuls les fichiers image sont autorisés';
+    }
+
+    if (selectedPhoto && selectedPhoto.size > 5 * 1024 * 1024) {
+      newErrors.photo = 'La photo ne doit pas dépasser 5 Mo';
     }
 
     setErrors(newErrors);
@@ -71,6 +83,18 @@ export const TreatmentForm: React.FC<TreatmentFormProps> = ({
     }
   };
 
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setSelectedPhoto(file);
+    if (file && !file.type.startsWith('image/')) {
+      setErrors({ ...errors, photo: 'Seuls les fichiers image sont autorisés' });
+    } else if (file && file.size > 5 * 1024 * 1024) {
+      setErrors({ ...errors, photo: 'La photo ne doit pas dépasser 5 Mo' });
+    } else {
+      setErrors({ ...errors, photo: undefined });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -85,9 +109,11 @@ export const TreatmentForm: React.FC<TreatmentFormProps> = ({
           treatment_name: formData.treatment_name.trim(),
           frequency: formData.frequency || null,
           end_date: formData.end_date || null,
-          document_url: existingDocument
+          document_url: existingDocument,
+          photo_url: existingPhoto
         },
-        selectedFile || undefined
+        selectedFile || undefined,
+        selectedPhoto || undefined
       );
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -105,6 +131,11 @@ export const TreatmentForm: React.FC<TreatmentFormProps> = ({
   const handleRemoveDocument = () => {
     setExistingDocument(null);
     setSelectedFile(null);
+  };
+
+  const handleRemovePhoto = () => {
+    setExistingPhoto(null);
+    setSelectedPhoto(null);
   };
 
   return (
@@ -190,6 +221,42 @@ export const TreatmentForm: React.FC<TreatmentFormProps> = ({
               </div>
             )}
             {errors.file && <span className="error-message">{errors.file}</span>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="photo">
+              Photo
+            </label>
+            <input
+              id="photo"
+              type="file"
+              accept="image/jpeg,image/png,image/jpg"
+              onChange={handlePhotoChange}
+            />
+            {existingPhoto && !selectedPhoto && (
+              <div className="existing-file">
+                <button 
+                  type="button"
+                  className="btn-remove-file"
+                  onClick={handleRemovePhoto}
+                >
+                  Supprimer la photo
+                </button>
+              </div>
+            )}
+            {selectedPhoto && (
+              <div className="selected-file">
+                🖼️ {selectedPhoto.name}
+                <button 
+                  type="button"
+                  className="btn-remove-file"
+                  onClick={() => setSelectedPhoto(null)}
+                >
+                  Annuler
+                </button>
+              </div>
+            )}
+            {errors.photo && <span className="error-message">{errors.photo}</span>}
           </div>
 
           <div className="form-actions">

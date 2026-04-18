@@ -1,0 +1,90 @@
+.health-list {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.health-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.health-table thead {
+  background: var(--color-gray-50);
+  border-bottom: 2px solid var(--color-gray-200);
+}
+
+.health-table th {
+  padding: var(--spacing-4);
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  font-size: 0.875rem;
+}
+
+.health-table td {
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--color-gray-200);
+  color: var(--color-gray-600);
+  font-size: 0.875rem;
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.clickable-row:hover {
+  background: var(--color-gray-50);
+}
+
+.list-empty {
+  text-align: center;
+  padding: var(--spacing-8);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  color: var(--color-gray-500);
+}
+
+@media (max-width: 768px) {
+  .health-table thead {
+    display: none;
+  }
+
+  .health-table,
+  .health-table tbody,
+  .health-table tr,
+  .health-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .health-table tr {
+    margin-bottom: var(--spacing-4);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    background: var(--color-white);
+  }
+
+  .health-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-3);
+    border-bottom: 1px solid var(--color-gray-100);
+  }
+
+  .health-table td:last-child {
+    border-bottom: none;
+  }
+
+  .health-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-gray-700);
+    margin-right: var(--spacing-4);
+  }
+}

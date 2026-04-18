@@ -1,7 +1,9 @@
+// src/components/TreatmentSection/TreatmentSection.tsx
 import React, { useState, useEffect } from 'react';
 import { type Treatment, treatmentService } from '../../services/treatmentService';
 import { TreatmentForm } from '../TreatmentForm/TreatmentForm';
 import { TreatmentList } from '../TreatmentList/TreatmentList';
+import { TreatmentPhotoGallery } from '../TreatmentPhotoGallery/TreatmentPhotoGallery';
 import './TreatmentSection.css';
 
 interface TreatmentSectionProps {
@@ -57,24 +59,47 @@ export const TreatmentSection: React.FC<TreatmentSectionProps> = ({ animalId }) 
     frequency: string | null;
     end_date: string | null;
     document_url: string | null;
-  }, file?: File) => {
+    photo_url: string | null;
+  }, file?: File, photoFile?: File) => {
     try {
       if (editingTreatment) {
         if (file) {
           await treatmentService.updateTreatmentDocument(editingTreatment.id, file);
         }
         
+        if (photoFile) {
+          await treatmentService.updateTreatmentPhoto(editingTreatment.id, photoFile);
+        }
+        
         await treatmentService.updateTreatment(editingTreatment.id, {
           treatment_name: data.treatment_name,
           frequency: data.frequency,
           end_date: data.end_date,
-          document_url: data.document_url
+          document_url: data.document_url,
+          photo_url: data.photo_url
         });
         
         showMessage('success', 'Traitement modifié avec succès');
       } else {
-        if (file) {
+        if (file && photoFile) {
+          const treatmentData = {
+            animal_id: animalId,
+            treatment_name: data.treatment_name,
+            frequency: data.frequency,
+            end_date: data.end_date
+          };
+          
+          const treatmentWithDoc = await treatmentService.createTreatmentWithDocument(file, treatmentData);
+          await treatmentService.updateTreatmentPhoto(treatmentWithDoc.id, photoFile);
+        } else if (file) {
           await treatmentService.createTreatmentWithDocument(file, {
+            animal_id: animalId,
+            treatment_name: data.treatment_name,
+            frequency: data.frequency,
+            end_date: data.end_date
+          });
+        } else if (photoFile) {
+          await treatmentService.createTreatmentWithPhoto(photoFile, {
             animal_id: animalId,
             treatment_name: data.treatment_name,
             frequency: data.frequency,
@@ -86,7 +111,8 @@ export const TreatmentSection: React.FC<TreatmentSectionProps> = ({ animalId }) 
             treatment_name: data.treatment_name,
             frequency: data.frequency,
             end_date: data.end_date,
-            document_url: null
+            document_url: null,
+            photo_url: null
           });
         }
         showMessage('success', 'Traitement ajouté avec succès');
@@ -117,6 +143,8 @@ export const TreatmentSection: React.FC<TreatmentSectionProps> = ({ animalId }) 
 
   return (
     <div className="treatment-section">
+      <TreatmentPhotoGallery animalId={animalId} onPhotoChange={loadTreatments} />
+      
       <div className="treatment-section-header">
         <h3>Traitements</h3>
         <button className="btn-add" onClick={handleAddClick}>

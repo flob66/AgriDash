@@ -29,27 +29,27 @@ export const TreatmentList: React.FC<TreatmentListProps> = ({
   const handleDownloadDocument = (documentUrl: string, treatmentName: string) => {
     try {
       const link = document.createElement('a');
-      
+
       if (documentUrl.startsWith('data:application/pdf;base64,')) {
         const base64Data = documentUrl.replace('data:application/pdf;base64,', '');
-        
+
         const byteCharacters = atob(base64Data);
         const byteNumbers = new Array(byteCharacters.length);
-        
+
         for (let i = 0; i < byteCharacters.length; i++) {
           byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
-        
+
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: 'application/pdf' });
         const blobUrl = URL.createObjectURL(blob);
-        
+
         link.href = blobUrl;
         link.download = `traitement_${treatmentName.replace(/\s/g, '_')}_${Date.now()}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         URL.revokeObjectURL(blobUrl);
       } else {
         link.href = documentUrl;
@@ -64,12 +64,17 @@ export const TreatmentList: React.FC<TreatmentListProps> = ({
     }
   };
 
+  const handleViewPhoto = (photoUrl: string) => {
+    window.open(photoUrl, '_blank');
+  };
+
   return (
     <div className="treatment-list">
       <div className="treatment-list-header">
         <div className="header-name">Nom du traitement</div>
         <div className="header-frequency">Fréquence</div>
         <div className="header-end-date">Date de fin</div>
+        <div className="header-photo">Photo</div>
         <div className="header-document">Document</div>
         <div className="header-actions">Actions</div>
       </div>
@@ -84,6 +89,19 @@ export const TreatmentList: React.FC<TreatmentListProps> = ({
           </div>
           <div className="item-end-date">
             {formatDate(treatment.end_date)}
+          </div>
+          <div className="item-photo">
+            {treatment.photo_url ? (
+              <button 
+                className="btn-view-photo"
+                onClick={() => handleViewPhoto(treatment.photo_url!)}
+                title="Voir la photo"
+              >
+                🖼️ Voir photo
+              </button>
+            ) : (
+              <span className="no-photo">Aucune</span>
+            )}
           </div>
           <div className="item-document">
             {treatment.document_url ? (
