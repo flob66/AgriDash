@@ -25,9 +25,10 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  width: calc(100vw - 1rem);
   min-width: 320px;
   min-height: 100vh;
+  background: white;
 }
 
 h1 {
@@ -103,4 +104,8 @@ button:focus-visible {
 .modal-content {
   z-index: 1001;
   position: relative;
+}
+
+input{
+  color: black;
 }
