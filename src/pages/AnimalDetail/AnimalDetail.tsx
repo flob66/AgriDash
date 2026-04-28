@@ -5,6 +5,7 @@ import { AnimalDetailInfo } from '../../components/AnimalDetailInfo/AnimalDetail
 import { AnimalImageGallery } from '../../components/AnimalImageGallery/AnimalImageGallery';
 import { AnimalHealthHistory } from '../../components/AnimalHealthHistory/AnimalHealthHistory';
 import './AnimalDetail.css';
+import { Header } from '../../components/Header/Header';
 
 interface Animal {
   id: string;
@@ -71,6 +72,7 @@ export const AnimalDetail = () => {
 
   return (
     <div className="animal-detail-container">
+      <Header />
       <div className="animal-detail-header">
         <button className="btn-back" onClick={handleBack}>
           ← Retour

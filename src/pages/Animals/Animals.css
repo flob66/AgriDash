@@ -18,6 +18,11 @@
   gap: var(--spacing-4);
 }
 
+.animals-header button{
+  display: block;
+  max-width: fit-content;
+}
+
 .header-title-section {
   display: flex;
   align-items: center;

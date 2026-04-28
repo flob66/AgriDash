@@ -144,16 +144,14 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }: AnimalFormProps) => {
         </div>
 
         {initialData?.id && (
-          <>
-            <div className="form-section">
-              <h3 className="section-title">Photos</h3>
-              <AnimalPhotoGallery 
-                key={refreshGallery}
-                animalId={initialData.id} 
-                onPhotoChange={handlePhotoChange}
-              />
-            </div>
-          </>
+          <div className="form-section">
+            <h3 className="section-title">Photos</h3>
+            <AnimalPhotoGallery 
+              key={refreshGallery}
+              animalId={initialData.id} 
+              onPhotoChange={handlePhotoChange}
+            />
+          </div>
         )}
 
         <div className="form-actions">
@@ -169,54 +167,57 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }: AnimalFormProps) => {
           </button>
         </div>
       </form>
-      <div className="form-section health-section">
-        <h3 className="section-title">Santé</h3>
+      
+      {initialData?.id && (
+        <div className="form-section health-section">
+          <h3 className="section-title">Santé</h3>
 
-        <div className="health-tabs">
-          <button
-            type="button"
-            className={`health-tab ${activeHealthTab === 'vaccinations' ? 'active' : ''}`}
-            onClick={(e) => {
-              e.preventDefault();
-              setActiveHealthTab('vaccinations');
-            }}
-          >
-            💉 Vaccinations
-          </button>
-          <button
-            type="button"
-            className={`health-tab ${activeHealthTab === 'treatments' ? 'active' : ''}`}
-            onClick={(e) => {
-              e.preventDefault();
-              setActiveHealthTab('treatments');
-            }}
-          >
-            💊 Traitements
-          </button>
-          <button
-            type="button"
-            className={`health-tab ${activeHealthTab === 'health-issues' ? 'active' : ''}`}
-            onClick={(e) => {
-              e.preventDefault();
-              setActiveHealthTab('health-issues');
-            }}
-          >
-            🏥 Problèmes de santé
-          </button>
-        </div>
+          <div className="health-tabs">
+            <button
+              type="button"
+              className={`health-tab ${activeHealthTab === 'vaccinations' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveHealthTab('vaccinations');
+              }}
+            >
+              💉 Vaccinations
+            </button>
+            <button
+              type="button"
+              className={`health-tab ${activeHealthTab === 'treatments' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveHealthTab('treatments');
+              }}
+            >
+              💊 Traitements
+            </button>
+            <button
+              type="button"
+              className={`health-tab ${activeHealthTab === 'health-issues' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveHealthTab('health-issues');
+              }}
+            >
+              🏥 Problèmes de santé
+            </button>
+          </div>
 
-        <div className="health-tab-content">
-          {activeHealthTab === 'vaccinations' && (
-            <VaccinationSection animalId={initialData?.id} />
-          )}
-          {activeHealthTab === 'treatments' && (
-            <TreatmentSection animalId={initialData?.id} />
-          )}
-          {activeHealthTab === 'health-issues' && (
-            <HealthIssueSection animalId={initialData?.id} />
-          )}
+          <div className="health-tab-content">
+            {activeHealthTab === 'vaccinations' && (
+              <VaccinationSection animalId={initialData.id} />
+            )}
+            {activeHealthTab === 'treatments' && (
+              <TreatmentSection animalId={initialData.id} />
+            )}
+            {activeHealthTab === 'health-issues' && (
+              <HealthIssueSection animalId={initialData.id} />
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 .animal-detail-container {
-  max-width: 1200px;
+  width: calc(100vw - 1rem);
   margin: 0 auto;
-  padding: var(--spacing-6);
   background: var(--color-gray-50);
   min-height: 100vh;
 }

@@ -87,34 +87,41 @@ export function HealthHistory() {
   return (
     <div className="health-history-page">
       <Header />
-      
-      <div className="page-header">
-        <h1>Historique de santé</h1>
-        <div className="view-toggle">
-          <button
-            type="button"
-            className={`toggle-btn ${viewMode === 'gallery' ? 'active' : ''}`}
-            onClick={() => setViewMode('gallery')}
-          >
-            Vue galerie
-          </button>
-          <button
-            type="button"
-            className={`toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
-          >
-            Vue liste
-          </button>
+      <div className='health-history-container'>
+        <div className="page-header">
+          <div className="header-title-section">
+            <div className="header-icon">🏥</div>
+            <div>
+              <h1>Historique de santé</h1>
+              <p>Consultez l'ensemble des problèmes de santé de vos animaux</p>
+            </div>
+          </div>
+          <div className="view-toggle">
+            <button
+              type="button"
+              className={`toggle-btn ${viewMode === 'gallery' ? 'active' : ''}`}
+              onClick={() => setViewMode('gallery')}
+            >
+              Vue galerie
+            </button>
+            <button
+              type="button"
+              className={`toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+            >
+              Vue liste
+            </button>
+          </div>
         </div>
+
+        <HealthIssueFilters animals={animals} onFiltersChange={handleFiltersChange} />
+
+        {viewMode === 'gallery' ? (
+          <HealthGallery issues={filteredIssues} />
+        ) : (
+          <HealthList issues={filteredIssues} />
+        )}
       </div>
-
-      <HealthIssueFilters animals={animals} onFiltersChange={handleFiltersChange} />
-
-      {viewMode === 'gallery' ? (
-        <HealthGallery issues={filteredIssues} />
-      ) : (
-        <HealthList issues={filteredIssues} />
-      )}
     </div>
   );
 }
