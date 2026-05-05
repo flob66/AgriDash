@@ -208,3 +208,8 @@
     padding: var(--spacing-5);
   }
 }
+
+.draggable-section.drag-over .draggable-content {
+  transform: translateY(8px);
+  transition: transform 0.1s ease;
+}

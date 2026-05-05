@@ -1,0 +1,60 @@
+.draggable-section {
+  position: relative;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.draggable-section.edit-mode {
+  cursor: grab;
+}
+
+.draggable-section.edit-mode:active {
+  cursor: grabbing;
+}
+
+.drag-handle {
+  position: absolute;
+  top: var(--spacing-3);
+  left: var(--spacing-3);
+  font-size: 1.25rem;
+  color: var(--color-gray-500);
+  cursor: grab;
+  background: var(--color-white);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.draggable-section.edit-mode:hover .drag-handle {
+  opacity: 1;
+}
+
+.draggable-content {
+  width: 100%;
+  transition: transform 0.1s ease;
+}
+
+.draggable-section.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+
+.draggable-section.drag-over {
+  transform: translateY(8px);
+  transition: transform 0.1s ease;
+}
+
+@media (max-width: 768px) {
+  .drag-handle {
+    top: var(--spacing-2);
+    left: var(--spacing-2);
+    font-size: 1rem;
+    padding: var(--spacing-1);
+  }
+}
