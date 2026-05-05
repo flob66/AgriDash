@@ -112,6 +112,7 @@ export function Dashboard() {
 
   const handleDragOver = (e: React.DragEvent, targetIndex: number) => {
     setDragOverIndex(targetIndex);
+    console.log('Dragging over index:', dragOverIndex, e);
   };
 
   const handleDrop = (sourceId: number, targetIndex: number) => {

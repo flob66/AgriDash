@@ -28,6 +28,7 @@ export function KeyInfoSection({ userId, sectionId  }: KeyInfoSectionProps) {
   const [showModal, setShowModal] = useState(false);
 
   const loadAll = async () => {
+    console.log('sectionId', sectionId)
     try {
       const configData = await getKeyInfoConfig(userId);
       setConfig(configData);
