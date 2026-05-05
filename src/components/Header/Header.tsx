@@ -34,6 +34,9 @@ export function Header() {
           <Link to="/health-history" className="nav-link">
             Santé
           </Link>
+          <Link to="/tasks" className="nav-link">
+            Tâches
+          </Link>
           <Link to="/account" className="nav-link">
             Mon compte
           </Link>
