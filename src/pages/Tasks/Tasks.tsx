@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Header } from '../../components/Header/Header';
 import { useAuth } from '../../hooks/useAuth';
-import { getTasks, createTask, updateTask, deleteTask, searchTasks, type Task, type TaskInput } from '../../services/tasksService';
+import { getTasks, createTask, updateTask, deleteTask, type Task, type TaskInput } from '../../services/tasksService';
+import { getReminders, createReminder, deleteReminder, getTaskReminders, type ReminderWithTask } from '../../services/remindersService';
 import { TaskModal } from '../../components/Tasks/TaskModal';
 import { TaskForm } from '../../components/Tasks/TaskForm';
 import { DeleteTaskModal } from '../../components/Tasks/DeleteTaskModal';
@@ -9,6 +10,9 @@ import { TaskInfoModal } from '../../components/Tasks/TaskInfoModal';
 import { TasksFilters } from '../../components/Tasks/TasksFilters';
 import { TasksListView } from '../../components/Tasks/TasksListView';
 import { TasksCalendar } from '../../components/Tasks/TasksCalendar';
+import { ReminderModal } from '../../components/Reminders/ReminderModal';
+import { DeleteReminderModal } from '../../components/Reminders/DeleteReminderModal';
+import { RemindersList } from '../../components/Reminders/ReminderList';
 import './Tasks.css';
 
 type ViewMode = 'list' | 'calendar';
@@ -28,6 +32,11 @@ export function Tasks() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showReminderModal, setShowReminderModal] = useState(false);
+  const [deletingReminder, setDeletingReminder] = useState<ReminderWithTask | null>(null);
+  const [isDeletingReminder, setIsDeletingReminder] = useState(false);
+  const [taskReminders, setTaskReminders] = useState<ReminderWithTask[]>([]);
+  const [loadingReminders, setLoadingReminders] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -52,8 +61,29 @@ export function Tasks() {
     }
   };
 
-  const applyFiltersAndSort = async () => {
-    if (!user) return;
+  const loadTaskReminders = async (taskId: number) => {
+    setLoadingReminders(true);
+    try {
+      const data = await getTaskReminders(taskId);
+      const remindersWithTask: ReminderWithTask[] = data.map(r => ({
+        ...r,
+        task_title: allTasks.find(t => t.id === r.task_id)?.title || 'Tâche inconnue',
+      }));
+      setTaskReminders(remindersWithTask);
+    } catch (error) {
+      console.error('Error loading reminders:', error);
+    } finally {
+      setLoadingReminders(false);
+    }
+  };
+
+  useEffect(() => {
+    if (infoTaskId) {
+      loadTaskReminders(infoTaskId);
+    }
+  }, [infoTaskId]);
+
+  const applyFiltersAndSort = () => {
     let tasks = [...allTasks];
     if (searchQuery.trim()) {
       tasks = tasks.filter(task => task.title.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -119,8 +149,31 @@ export function Tasks() {
     }
   };
 
-  const handleTaskClick = (task: Task) => {
-    setInfoTaskId(task.id);
+  const handleCreateReminder = async (taskId: number, name: string, date: string) => {
+    if (!user) return;
+    try {
+      await createReminder(user.id, taskId, name, date);
+      showMessage('success', 'Rappel créé avec succès');
+      if (infoTaskId) await loadTaskReminders(infoTaskId);
+    } catch (error) {
+      showMessage('error', 'Erreur lors de la création du rappel');
+      throw error;
+    }
+  };
+
+  const handleDeleteReminder = async () => {
+    if (!deletingReminder) return;
+    setIsDeletingReminder(true);
+    try {
+      await deleteReminder(deletingReminder.id);
+      showMessage('success', 'Rappel supprimé avec succès');
+      setDeletingReminder(null);
+      if (infoTaskId) await loadTaskReminders(infoTaskId);
+    } catch (error) {
+      showMessage('error', 'Erreur lors de la suppression du rappel');
+    } finally {
+      setIsDeletingReminder(false);
+    }
   };
 
   return (
@@ -144,41 +197,36 @@ export function Tasks() {
                 📅 Vue Calendrier
               </button>
             </div>
+            <button className="btn-add-reminder" onClick={() => setShowReminderModal(true)}>
+              🔔 Ajouter un rappel
+            </button>
             <button className="btn-add-task" onClick={() => setShowCreateModal(true)}>
               + Ajouter une tâche
             </button>
           </div>
         </div>
 
-        {message && (
-          <div className={`message message-${message.type}`}>
-            {message.text}
-          </div>
-        )}
+        {message && <div className={`message message-${message.type}`}>{message.text}</div>}
 
         {viewMode === 'list' && (
-          <TasksFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            sortOrder={sortOrder}
-            onSortChange={setSortOrder}
-          />
+          <TasksFilters searchQuery={searchQuery} onSearchChange={setSearchQuery} sortOrder={sortOrder} onSortChange={setSortOrder} />
         )}
 
         {loading ? (
-          <div className="tasks-loading">
-            <div className="spinner"></div>
-            <p>Chargement des tâches...</p>
-          </div>
+          <div className="tasks-loading"><div className="spinner"></div><p>Chargement des tâches...</p></div>
         ) : viewMode === 'list' ? (
-          <TasksListView
-            tasks={filteredTasks}
-            onEdit={setEditingTask}
-            onDelete={setDeletingTask}
-            onInfo={(task) => setInfoTaskId(task.id)}
-          />
+          <TasksListView tasks={filteredTasks} onEdit={setEditingTask} onDelete={setDeletingTask} onInfo={(task) => setInfoTaskId(task.id)} />
         ) : (
-          <TasksCalendar tasks={filteredTasks} onTaskClick={handleTaskClick} />
+          <TasksCalendar tasks={filteredTasks} onTaskClick={(task) => setInfoTaskId(task.id)} />
+        )}
+
+        {user && (
+          <RemindersList
+            userId={user.id}
+            tasks={allTasks}
+            onReminderDelete={() => loadTasks()}
+            onReminderClick={(task) => setInfoTaskId(task.id)}
+          />
         )}
       </main>
 
@@ -199,19 +247,19 @@ export function Tasks() {
         )}
       </TaskModal>
 
-      <DeleteTaskModal
-        isOpen={!!deletingTask}
-        taskTitle={deletingTask?.title || ''}
-        onConfirm={handleDeleteTask}
-        onCancel={() => setDeletingTask(null)}
-        isDeleting={isDeleting}
-      />
+      <DeleteTaskModal isOpen={!!deletingTask} taskTitle={deletingTask?.title || ''} onConfirm={handleDeleteTask} onCancel={() => setDeletingTask(null)} isDeleting={isDeleting} />
 
       <TaskInfoModal
         isOpen={infoTaskId !== null}
         taskId={infoTaskId}
         onClose={() => setInfoTaskId(null)}
+        reminders={taskReminders}
+        onDeleteReminder={(reminder) => setDeletingReminder(reminder)}
+        loadingReminders={loadingReminders}
       />
+
+      <ReminderModal isOpen={showReminderModal} tasks={allTasks} onClose={() => setShowReminderModal(false)} onSave={handleCreateReminder} />
+      <DeleteReminderModal isOpen={!!deletingReminder} reminderName={deletingReminder?.reminder_name || ''} onConfirm={handleDeleteReminder} onCancel={() => setDeletingReminder(null)} isDeleting={isDeletingReminder} />
     </div>
   );
 }

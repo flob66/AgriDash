@@ -1,52 +1,43 @@
 import { useState, useEffect } from 'react';
 import {
-  getKeyInfoConfig,
-  updateKeyInfoConfig,
   getUpcomingTasks,
-  getActiveReminders,
   getStats,
   type KeyInfoConfig,
   type UpcomingTask,
-  type ActiveReminder,
   type Stats,
 } from '../../services/dashboardKeyInfoService';
+import { getActiveReminders as getActiveRemindersService } from '../../services/remindersService';
 import { KeyInfoCard } from './KeyInfoCard';
-import { KeyInfoModal } from './KeyInfoModal';
 import './KeyInfoSection.css';
 
 interface KeyInfoSectionProps {
   userId: string;
-  sectionId: number;
+  config: KeyInfoConfig;
 }
 
-export function KeyInfoSection({ userId, sectionId  }: KeyInfoSectionProps) {
-  const [config, setConfig] = useState<KeyInfoConfig | null>(null);
+export function KeyInfoSection({ userId, config }: KeyInfoSectionProps) {
   const [upcomingTasks, setUpcomingTasks] = useState<UpcomingTask[]>([]);
-  const [activeReminders, setActiveReminders] = useState<ActiveReminder[]>([]);
+  const [activeReminders, setActiveReminders] = useState<any[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
 
-  const loadAll = async () => {
-    console.log('sectionId', sectionId)
+  const loadData = async () => {
+    setLoading(true);
     try {
-      const configData = await getKeyInfoConfig(userId);
-      setConfig(configData);
+      const promises: Promise<any>[] = [];
+      if (config.rendus) promises.push(getUpcomingTasks(userId));
+      else promises.push(Promise.resolve([]));
+      if (config.rappels) promises.push(getActiveRemindersService(userId));
+      else promises.push(Promise.resolve([]));
+      if (config.statistiques) promises.push(getStats(userId));
+      else promises.push(Promise.resolve(null));
 
-      if (configData.rendus) {
-        const tasks = await getUpcomingTasks(userId);
-        setUpcomingTasks(tasks);
-      }
-      if (configData.rappels) {
-        const reminders = await getActiveReminders(userId);
-        setActiveReminders(reminders);
-      }
-      if (configData.statistiques) {
-        const statsData = await getStats(userId);
-        setStats(statsData);
-      }
+      const [tasks, reminders, statsData] = await Promise.all(promises);
+      setUpcomingTasks(tasks || []);
+      setActiveReminders(reminders || []);
+      setStats(statsData);
     } catch (error) {
-      console.error('Error loading key info:', error);
+      console.error('Error loading key info data:', error);
     } finally {
       setLoading(false);
     }
@@ -54,18 +45,9 @@ export function KeyInfoSection({ userId, sectionId  }: KeyInfoSectionProps) {
 
   useEffect(() => {
     if (userId) {
-      loadAll();
+      loadData();
     }
-  }, [userId]);
-
-  const handleSaveConfig = async (fields: string[]) => {
-    try {
-      await updateKeyInfoConfig(userId, fields);
-      await loadAll();
-    } catch (error) {
-      console.error('Error saving config:', error);
-    }
-  };
+  }, [userId, config.rendus, config.rappels, config.statistiques]);
 
   if (loading) {
     return (
@@ -78,7 +60,7 @@ export function KeyInfoSection({ userId, sectionId  }: KeyInfoSectionProps) {
 
   const enabledCards = [];
 
-  if (config?.rendus) {
+  if (config.rendus) {
     enabledCards.push(
       <KeyInfoCard key="rendus" title="Prochaines dates de rendu" emptyMessage="Aucune tâche à venir">
         <ul>
@@ -92,21 +74,37 @@ export function KeyInfoSection({ userId, sectionId  }: KeyInfoSectionProps) {
     );
   }
 
-  if (config?.rappels) {
+  if (config.rappels) {
+    const sortedReminders = [...activeReminders].sort(
+      (a, b) => new Date(a.reminder_date).getTime() - new Date(b.reminder_date).getTime()
+    );
+    const topReminders = sortedReminders.slice(0, 5);
     enabledCards.push(
       <KeyInfoCard key="rappels" title="Rappels actifs" emptyMessage="Aucun rappel actif">
         <ul>
-          {activeReminders.map(reminder => (
-            <li key={reminder.id}>
-              <strong>{reminder.reminder_name}</strong> – {new Date(reminder.reminder_date).toLocaleDateString('fr-FR')}
-            </li>
-          ))}
+          {topReminders.map(reminder => {
+            const daysLeft = Math.ceil((new Date(reminder.reminder_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+            let priorityClass = '';
+            if (daysLeft <= 1) priorityClass = 'priority-high';
+            else if (daysLeft <= 3) priorityClass = 'priority-medium';
+            else priorityClass = 'priority-low';
+            return (
+              <li key={reminder.id} className={`reminder-item ${priorityClass}`}>
+                <div className="reminder-dashboard-item">
+                  <strong>{reminder.reminder_name}</strong>
+                  <span>{new Date(reminder.reminder_date).toLocaleDateString('fr-FR')}</span>
+                  <span className="reminder-days">({daysLeft} jour{daysLeft > 1 ? 's' : ''})</span>
+                  <span className="reminder-task">Tâche : {reminder.task_title}</span>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </KeyInfoCard>
     );
   }
 
-  if (config?.statistiques && stats) {
+  if (config.statistiques && stats) {
     enabledCards.push(
       <KeyInfoCard key="statistiques" title="Statistiques">
         <div className="stat-item">
@@ -125,9 +123,6 @@ export function KeyInfoSection({ userId, sectionId  }: KeyInfoSectionProps) {
     <div className="key-info-section">
       <div className="key-info-header">
         <h2>Informations clés</h2>
-        <button className="configure-btn" onClick={() => setShowModal(true)}>
-          ⚙️ Configurer
-        </button>
       </div>
       {enabledCards.length === 0 ? (
         <div className="key-info-empty">
@@ -136,12 +131,6 @@ export function KeyInfoSection({ userId, sectionId  }: KeyInfoSectionProps) {
       ) : (
         <div className="key-info-grid">{enabledCards}</div>
       )}
-      <KeyInfoModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onSave={handleSaveConfig}
-        initialConfig={config || { rendus: true, rappels: true, statistiques: true }}
-      />
     </div>
   );
 }

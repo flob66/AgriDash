@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
 import { getTaskById, type TaskWithReminders } from '../../services/tasksService';
+import { type ReminderWithTask } from '../../services/remindersService';
 import './TaskInfoModal.css';
 
 interface TaskInfoModalProps {
   isOpen: boolean;
   taskId: number | null;
   onClose: () => void;
+  reminders: ReminderWithTask[];
+  onDeleteReminder: (reminder: ReminderWithTask) => void;
+  loadingReminders?: boolean;
 }
 
-export function TaskInfoModal({ isOpen, taskId, onClose }: TaskInfoModalProps) {
+export function TaskInfoModal({ isOpen, taskId, onClose, reminders, onDeleteReminder, loadingReminders = false }: TaskInfoModalProps) {
   const [task, setTask] = useState<TaskWithReminders | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,39 +57,37 @@ export function TaskInfoModal({ isOpen, taskId, onClose }: TaskInfoModalProps) {
         </div>
         <div className="modal-body">
           {loading ? (
-            <div className="info-loading">
-              <div className="spinner-small"></div>
-              <p>Chargement...</p>
-            </div>
+            <div className="info-loading"><div className="spinner-small"></div><p>Chargement...</p></div>
           ) : error ? (
             <div className="info-error">{error}</div>
           ) : task ? (
             <>
               <div className="info-section">
-                <div className="info-row">
-                  <span className="info-label">Nom :</span>
-                  <span className="info-value">{task.title}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Date prévue :</span>
-                  <span className="info-value">{formatDate(task.due_date)}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Description :</span>
-                  <span className="info-value">{task.description || 'Aucune description'}</span>
-                </div>
+                <div className="info-row"><span className="info-label">Nom :</span><span className="info-value">{task.title}</span></div>
+                <div className="info-row"><span className="info-label">Date prévue :</span><span className="info-value">{formatDate(task.due_date)}</span></div>
+                <div className="info-row"><span className="info-label">Description :</span><span className="info-value">{task.description || 'Aucune description'}</span></div>
               </div>
-
               <div className="reminders-section">
                 <h4>Rappels associés</h4>
-                {task.reminders.length === 0 ? (
+                {loadingReminders ? (
+                  <div className="loading-small">Chargement des rappels...</div>
+                ) : reminders.length === 0 ? (
                   <p className="no-reminders">Aucun rappel associé à cette tâche</p>
                 ) : (
                   <ul className="reminders-list">
-                    {task.reminders.map((reminder) => (
+                    {reminders.map((reminder) => (
                       <li key={reminder.id}>
-                        <span className="reminder-name">{reminder.reminder_name}</span>
-                        <span className="reminder-date">{formatDate(reminder.reminder_date)}</span>
+                        <div className="reminder-info">
+                          <span className="reminder-name">{reminder.reminder_name}</span>
+                          <span className="reminder-date">{formatDate(reminder.reminder_date)}</span>
+                        </div>
+                        <button
+                          className="delete-reminder-btn"
+                          onClick={() => onDeleteReminder(reminder)}
+                          title="Supprimer le rappel"
+                        >
+                          🗑️
+                        </button>
                       </li>
                     ))}
                   </ul>

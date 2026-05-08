@@ -145,3 +145,81 @@
     border-right: 1px solid var(--color-gray-200);
   }
 }
+
+.day-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  max-height: 80px;
+}
+
+.reminder-item {
+  background: none;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  color: var(--color-gray-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.task-item {
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-gray-800);
+  background: var(--color-gray-100);
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.task-item:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+@media (max-width: 768px) {
+  .day-items {
+    max-height: 60px;
+  }
+  
+  .task-item, .reminder-item {
+    font-size: 0.65rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+.reminder-item {
+  background: none;
+  border: none;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  color: var(--color-gray-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.reminder-item:hover {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}

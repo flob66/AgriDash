@@ -90,3 +90,44 @@
     align-items: flex-start;
   }
 }
+
+.reminder-dashboard-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.reminder-dashboard-item strong {
+  font-size: 0.9rem;
+}
+
+.reminder-dashboard-item span {
+  font-size: 0.75rem;
+  color: var(--color-gray-600);
+}
+
+.reminder-dashboard-item .reminder-task {
+  font-size: 0.7rem;
+  font-style: italic;
+}
+
+.reminder-item.priority-high {
+  border-left: 3px solid var(--color-error);
+  background-color: var(--color-error-light);
+}
+
+.reminder-item.priority-medium {
+  border-left: 3px solid #ffc107;
+  background-color: #fff3cd;
+}
+
+.reminder-item.priority-low {
+  border-left: 3px solid var(--color-success);
+  background-color: #d4edda;
+}
+
+.reminder-days {
+  font-size: 0.7rem;
+  font-weight: bold;
+}

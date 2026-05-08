@@ -1,30 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './KeyInfoModal.css';
 
 interface KeyInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (fields: string[]) => void;
-  initialConfig: { rendus: boolean; rappels: boolean; statistiques: boolean };
+  initialConfig: { rendus: boolean; rappels: boolean; statistiques: boolean; showWelcome: boolean; showStatsCards: boolean; showShortcuts: boolean };
 }
 
 export function KeyInfoModal({ isOpen, onClose, onSave, initialConfig }: KeyInfoModalProps) {
-  const [selectedFields, setSelectedFields] = useState<string[]>(() => {
+  const [selectedFields, setSelectedFields] = useState<string[]>([]);
+
+  useEffect(() => {
     const fields: string[] = [];
     if (initialConfig.rendus) fields.push('rendus');
     if (initialConfig.rappels) fields.push('rappels');
     if (initialConfig.statistiques) fields.push('statistiques');
-    return fields;
-  });
+    if (initialConfig.showWelcome) fields.push('showWelcome');
+    if (initialConfig.showStatsCards) fields.push('showStatsCards');
+    if (initialConfig.showShortcuts) fields.push('showShortcuts');
+    setSelectedFields(fields);
+  }, [initialConfig]);
 
   if (!isOpen) return null;
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
-    if (checked) {
-      setSelectedFields([...selectedFields, field]);
-    } else {
-      setSelectedFields(selectedFields.filter(f => f !== field));
-    }
+    if (checked) setSelectedFields([...selectedFields, field]);
+    else setSelectedFields(selectedFields.filter(f => f !== field));
   };
 
   const handleSave = () => {
@@ -33,9 +35,7 @@ export function KeyInfoModal({ isOpen, onClose, onSave, initialConfig }: KeyInfo
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+    if (e.target === e.currentTarget) onClose();
   };
 
   return (
@@ -46,28 +46,31 @@ export function KeyInfoModal({ isOpen, onClose, onSave, initialConfig }: KeyInfo
           <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
         <div className="modal-body">
+          <h4>Informations clés</h4>
+          <h4>Éléments généraux du tableau de bord</h4>
           <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={selectedFields.includes('rendus')}
-              onChange={(e) => handleCheckboxChange('rendus', e.target.checked)}
-            />
+            <input type="checkbox" checked={selectedFields.includes('showWelcome')} onChange={(e) => handleCheckboxChange('showWelcome', e.target.checked)} />
+            <span>Afficher le bandeau de bienvenue</span>
+          </label>
+          <label className="checkbox-label">
+            <input type="checkbox" checked={selectedFields.includes('showStatsCards')} onChange={(e) => handleCheckboxChange('showStatsCards', e.target.checked)} />
+            <span>Afficher les cartes de statistiques (Animaux, Santé, Tâches, Rappels)</span>
+          </label>
+          <label className="checkbox-label">
+            <input type="checkbox" checked={selectedFields.includes('showShortcuts')} onChange={(e) => handleCheckboxChange('showShortcuts', e.target.checked)} />
+            <span>Afficher les raccourcis (Animaux, Santé, Tâches, Calendrier, Rapports)</span>
+          </label>
+          <hr />
+          <label className="checkbox-label">
+            <input type="checkbox" checked={selectedFields.includes('rendus')} onChange={(e) => handleCheckboxChange('rendus', e.target.checked)} />
             <span>Rendus (tâches à venir)</span>
           </label>
           <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={selectedFields.includes('rappels')}
-              onChange={(e) => handleCheckboxChange('rappels', e.target.checked)}
-            />
+            <input type="checkbox" checked={selectedFields.includes('rappels')} onChange={(e) => handleCheckboxChange('rappels', e.target.checked)} />
             <span>Rappels actifs</span>
           </label>
           <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={selectedFields.includes('statistiques')}
-              onChange={(e) => handleCheckboxChange('statistiques', e.target.checked)}
-            />
+            <input type="checkbox" checked={selectedFields.includes('statistiques')} onChange={(e) => handleCheckboxChange('statistiques', e.target.checked)} />
             <span>Statistiques (animaux & tâches)</span>
           </label>
         </div>

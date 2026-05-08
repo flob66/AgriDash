@@ -4,6 +4,9 @@ export interface KeyInfoConfig {
   rendus: boolean;
   rappels: boolean;
   statistiques: boolean;
+  showWelcome: boolean;
+  showStatsCards: boolean;
+  showShortcuts: boolean;
 }
 
 export interface UpcomingTask {
@@ -11,13 +14,6 @@ export interface UpcomingTask {
   title: string;
   due_date: string;
   status: string;
-}
-
-export interface ActiveReminder {
-  id: number;
-  reminder_name: string;
-  reminder_date: string;
-  task_id: number | null;
 }
 
 export interface Stats {
@@ -31,34 +27,40 @@ export async function getKeyInfoConfig(userId: string): Promise<KeyInfoConfig> {
     .select('id')
     .eq('user_id', userId)
     .eq('title', 'key_info')
-    .maybeSingle();
+    .single();
 
-  if (sectionError && sectionError.code !== 'PGRST116') {
-    throw sectionError;
-  }
+  if (sectionError && sectionError.code !== 'PGRST116') throw sectionError;
 
   if (!section) {
     await supabase.rpc('init_key_info_section', { user_id_param: userId });
-    return { rendus: true, rappels: true, statistiques: true };
+    return { rendus: true, rappels: true, statistiques: true, showWelcome: true, showStatsCards: true, showShortcuts: true };
   }
 
-  const { data: fields, error: fieldsError } = await supabase
+  const fields = ['rendus', 'rappels', 'statistiques', 'showWelcome', 'showStatsCards', 'showShortcuts'];
+  const { data: existingFields, error: fieldsError } = await supabase
     .from('dashboard_section_fields')
     .select('label, is_enabled')
-    .eq('section_id', section.id);
+    .eq('section_id', section.id)
+    .in('label', fields);
 
   if (fieldsError) throw fieldsError;
 
   const config: KeyInfoConfig = {
-    rendus: false,
-    rappels: false,
-    statistiques: false,
+    rendus: true,
+    rappels: true,
+    statistiques: true,
+    showWelcome: true,
+    showStatsCards: true,
+    showShortcuts: true,
   };
 
-  fields?.forEach(field => {
-    if (field.label === 'rendus') config.rendus = field.is_enabled;
-    if (field.label === 'rappels') config.rappels = field.is_enabled;
-    if (field.label === 'statistiques') config.statistiques = field.is_enabled;
+  existingFields?.forEach(f => {
+    if (f.label === 'rendus') config.rendus = f.is_enabled;
+    if (f.label === 'rappels') config.rappels = f.is_enabled;
+    if (f.label === 'statistiques') config.statistiques = f.is_enabled;
+    if (f.label === 'showWelcome') config.showWelcome = f.is_enabled;
+    if (f.label === 'showStatsCards') config.showStatsCards = f.is_enabled;
+    if (f.label === 'showShortcuts') config.showShortcuts = f.is_enabled;
   });
 
   return config;
@@ -75,57 +77,38 @@ export async function updateKeyInfoConfig(userId: string, fields: string[]): Pro
   if (sectionError) throw sectionError;
   if (!section) return;
 
-  const updates = fields.map(field => ({
-    section_id: section.id,
-    label: field,
-    is_enabled: true,
-  }));
-
-  const allFields = ['rendus', 'rappels', 'statistiques'];
-  const disabledFields = allFields.filter(f => !fields.includes(f));
-
-  for (const field of disabledFields) {
-    await supabase
+  const allFields = ['rendus', 'rappels', 'statistiques', 'showWelcome', 'showStatsCards', 'showShortcuts'];
+  for (const field of allFields) {
+    const isEnabled = fields.includes(field);
+    const { data: updated, error: updateError } = await supabase
       .from('dashboard_section_fields')
-      .update({ is_enabled: false })
+      .update({ is_enabled: isEnabled })
       .eq('section_id', section.id)
-      .eq('label', field);
-  }
+      .eq('label', field)
+      .select();
 
-  for (const field of updates) {
-    await supabase
-      .from('dashboard_section_fields')
-      .update({ is_enabled: true })
-      .eq('section_id', field.section_id)
-      .eq('label', field.label);
+    if (updateError) throw updateError;
+
+    if (!updated || updated.length === 0) {
+      await supabase.from('dashboard_section_fields').insert({
+        section_id: section.id,
+        label: field,
+        field_type: 'boolean',
+        is_enabled: isEnabled,
+      });
+    }
   }
 }
 
 export async function getUpcomingTasks(userId: string): Promise<UpcomingTask[]> {
   const today = new Date().toISOString().split('T')[0];
-
   const { data, error } = await supabase
     .from('tasks')
     .select('id, title, due_date, status')
     .eq('user_id', userId)
     .gte('due_date', today)
     .neq('status', 'completed')
-    .order('due_date', { ascending: true })
-    .limit(5);
-
-  if (error) throw error;
-  return data || [];
-}
-
-export async function getActiveReminders(userId: string): Promise<ActiveReminder[]> {
-  const today = new Date().toISOString().split('T')[0];
-
-  const { data, error } = await supabase
-    .from('reminders')
-    .select('id, reminder_name, reminder_date, task_id')
-    .eq('user_id', userId)
-    .gte('reminder_date', today)
-    .order('reminder_date', { ascending: true })
+    .order('due_date', { ascending: true, nullsFirst: false })
     .limit(5);
 
   if (error) throw error;
@@ -137,18 +120,13 @@ export async function getStats(userId: string): Promise<Stats> {
     .from('animals')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', userId);
-
   if (animalError) throw animalError;
 
   const { count: taskCount, error: taskError } = await supabase
     .from('tasks')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', userId);
-
   if (taskError) throw taskError;
 
-  return {
-    totalAnimals: animalCount || 0,
-    totalTasks: taskCount || 0,
-  };
+  return { totalAnimals: animalCount || 0, totalTasks: taskCount || 0 };
 }
