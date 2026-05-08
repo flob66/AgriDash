@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Header } from '../../components/Header/Header';
 import { useAuth } from '../../hooks/useAuth';
 import { getTasks, createTask, updateTask, deleteTask, type Task, type TaskInput } from '../../services/tasksService';
-import { getReminders, createReminder, deleteReminder, getTaskReminders, type ReminderWithTask } from '../../services/remindersService';
+import { createReminder, deleteReminder, getTaskReminders, type ReminderWithTask } from '../../services/remindersService';
 import { TaskModal } from '../../components/Tasks/TaskModal';
 import { TaskForm } from '../../components/Tasks/TaskForm';
 import { DeleteTaskModal } from '../../components/Tasks/DeleteTaskModal';

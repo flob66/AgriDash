@@ -71,7 +71,7 @@ export function Dashboard() {
           })(),
           getKeyInfoConfig(user.id)
         ]);
-
+        console.log('Stats data:', statsData);
         setAnimalCount(counts.animalCount);
         setHealthIssueCount(counts.healthCount);
         setTaskCount(tasks.length);
@@ -131,6 +131,8 @@ export function Dashboard() {
 
   const handleDragOver = (e: React.DragEvent, targetIndex: number) => {
     setDragOverIndex(targetIndex);
+    console.log('Drag over index:', dragOverIndex);
+    console.log('Event', e);
   };
 
   const handleDrop = (sourceId: number, targetIndex: number) => {
