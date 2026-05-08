@@ -1,0 +1,102 @@
+.task-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  border: 1px solid var(--color-gray-100);
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.task-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-3);
+}
+
+.task-card-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+}
+
+.task-actions {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.btn-edit, .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: var(--spacing-1);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.btn-edit:hover {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.btn-delete:hover {
+  background: var(--color-error-light);
+  color: var(--color-error);
+}
+
+.task-description {
+  margin-bottom: var(--spacing-4);
+  padding-top: var(--spacing-2);
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.task-description p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+  line-height: 1.5;
+}
+
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--color-gray-100);
+  font-size: 0.75rem;
+}
+
+.task-date {
+  color: var(--color-gray-500);
+}
+
+.task-status {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.btn-info {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: var(--spacing-1);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.btn-info:hover {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}

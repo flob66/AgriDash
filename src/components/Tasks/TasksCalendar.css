@@ -1,0 +1,225 @@
+.tasks-calendar {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-5);
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+}
+
+.nav-btn, .today-btn {
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all var(--transition-fast);
+}
+
+.nav-btn:hover, .today-btn:hover {
+  background: var(--color-gray-200);
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  padding: var(--spacing-2) 0;
+  border-bottom: 1px solid var(--color-gray-200);
+  margin-bottom: var(--spacing-2);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--color-gray-200);
+  border: 1px solid var(--color-gray-200);
+}
+
+.calendar-day {
+  background: var(--color-white);
+  min-height: 100px;
+  padding: var(--spacing-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.calendar-day.empty {
+  background: var(--color-gray-50);
+}
+
+.calendar-day.today {
+  background: var(--color-primary-soft);
+}
+
+.day-number {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-gray-700);
+}
+
+.day-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  max-height: 80px;
+}
+
+.task-item {
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-gray-800);
+  background: var(--color-gray-100);
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-item:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+@media (max-width: 768px) {
+  .tasks-calendar {
+    padding: var(--spacing-2);
+  }
+  
+  .calendar-day {
+    min-height: 80px;
+    padding: var(--spacing-1);
+  }
+  
+  .day-tasks {
+    max-height: 60px;
+  }
+  
+  .task-item {
+    font-size: 0.7rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 640px) {
+  .calendar-grid {
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+  }
+  
+  .calendar-weekdays {
+    display: none;
+  }
+  
+  .calendar-day {
+    display: inline-block;
+    width: 120px;
+    vertical-align: top;
+    border-right: 1px solid var(--color-gray-200);
+  }
+}
+
+.day-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  max-height: 80px;
+}
+
+.reminder-item {
+  background: none;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  color: var(--color-gray-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.task-item {
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-gray-800);
+  background: var(--color-gray-100);
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.task-item:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+@media (max-width: 768px) {
+  .day-items {
+    max-height: 60px;
+  }
+  
+  .task-item, .reminder-item {
+    font-size: 0.65rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+.reminder-item {
+  background: none;
+  border: none;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-md);
+  color: var(--color-gray-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.reminder-item:hover {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}

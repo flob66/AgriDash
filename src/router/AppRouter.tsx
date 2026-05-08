@@ -8,6 +8,7 @@ import { AnimalDetail } from '../pages/AnimalDetail/AnimalDetail'
 import { HealthHistory } from '../pages/HealthHistory/HealthHistory'
 import { ProtectedRoute } from './ProtectedRoute'
 import { useAuth } from '../hooks/useAuth'
+import { Tasks } from '../pages/Tasks/Tasks'
 
 export function AppRouter() {
   const { user, loading } = useAuth()
@@ -73,6 +74,14 @@ export function AppRouter() {
           element={
             <ProtectedRoute>
               <HealthHistory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tasks"
+          element={
+            <ProtectedRoute>
+              <Tasks />
             </ProtectedRoute>
           }
         />
